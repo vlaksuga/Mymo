@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/add_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddEditActivity">
+
+
+    <EditText
+        android:id="@+id/title_editText"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@android:color/transparent"
+        android:hint="@string/hint_title"
+        android:inputType="text"
+        android:padding="8dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divide_line_view"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/content_editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_editText">
+    </View>
+
+    <EditText
+        android:id="@+id/content_editText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:gravity="start|top"
+        android:hint="@string/hint_word"
+        android:padding="8dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/currentColor_textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divide_line_view" />
+
+    <TextView
+        android:id="@+id/currentColor_textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:clickable="true"
+        android:padding="16dp"
+        android:text="@string/hint_default_color"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button_color_red"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/ic_tag_red_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button_color_orange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/ic_tag_orange_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
+        app:layout_constraintStart_toEndOf="@+id/button_color_red" />
+
+    <ImageButton
+        android:id="@+id/button_color_green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/ic_tag_green_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
+        app:layout_constraintStart_toEndOf="@+id/button_color_orange" />
+
+    <ImageButton
+        android:id="@+id/button_color_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/ic_tag_blue_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
+        app:layout_constraintStart_toEndOf="@+id/button_color_green" />
+
+    <ImageButton
+        android:id="@+id/button_color_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/ic_tag_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
+        app:layout_constraintStart_toEndOf="@+id/button_color_blue" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

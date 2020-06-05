@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">MYMO</string>
+    <string name="hint_word">내용</string>
+    <string name="button_save">Save</string>
+    <string name="empty_not_saved">저장하지 못했습니다.</string>
+    <string name="id_title">id : </string>
+    <string name="insert_memo">내용을 입력해주세요.</string>
+    <string name="delete_memo">삭제되었습니다.</string>
+    <string name="delete_all_memo">모두 삭제되었습니다.</string>
+    <string name="save_memo">저장되었습니다.</string>
+    <string name="update_fail">수정에 실패했습니다.</string>
+    <string name="update_ok">수정했습니다.</string>
+    <string name="hint_default_color">BLACK</string>
+    <string name="hint_title">제목</string>
+    <string name="insert_title">제목을 입력해주세요</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_share_this_app">SHARE THIS APP</string>
+    <string name="menu_delete_all_memos">DELETE ALL MEMOS</string>
+    <string name="intent_fail">저장에 실패했습니다.</string>
+    <string name="list_null">EMPTY</string>
+</resources>
