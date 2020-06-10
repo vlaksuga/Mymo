@@ -4,11 +4,15 @@
     <item
         android:id="@+id/save_memo"
         android:icon="@drawable/ic_done_black_24dp"
-        android:title="Save"
+        android:title="@string/save_this"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/share_memo"
         android:icon="@drawable/ic_share"
-        android:title="Share this memo"
+        android:title="@string/share_this_memo"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/delete_this"
+        android:title="@string/menu_delete"
         app:showAsAction="never"/>
 </menu>

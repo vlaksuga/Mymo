@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 
 class MemoRepository(private val memoDao: MemoDao) {
     val allMemos: LiveData<List<Memo>> = memoDao.getCurrentIdAll()
-    val colorOrangeMemos : LiveData<List<Memo>> = memoDao.getColorOrange()
+    val colorOrangeMemos: LiveData<List<Memo>> = memoDao.getColorOrange()
 
     suspend fun insert(memo: Memo) {
         memoDao.insert(memo)

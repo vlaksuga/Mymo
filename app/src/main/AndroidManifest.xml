@@ -12,7 +12,9 @@
         <activity
             android:name=".AddEditActivity"
             android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.AddEditActivity"
+            />
         <activity android:name=".MainActivity"
             android:launchMode="singleTop">
             <intent-filter>

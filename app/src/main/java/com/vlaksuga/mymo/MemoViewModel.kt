@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 class MemoViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: MemoRepository
     var allMemos: LiveData<List<Memo>>
-    private var viewTypeCode : Int
+    var viewTypeCode : Int
 
     init {
         val memosDao = MemoDatabase.getDatabase(application, viewModelScope)!!.memoDao()

@@ -4,21 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:id="@+id/delete_all_memos"
-        android:title="@string/menu_delete_all_memos"
-        app:showAsAction="never" />
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/menu_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/add_memo_menu"
+        android:icon="@drawable/ic_add_white"
+        android:title="@string/add_new"
+        android:iconTint="#FFFFFF"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/memo_color_filter"
+        android:title="카테고리"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/share_app"
         android:title="@string/menu_share_this_app"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/get_orange_memo"
-        android:title="COLOR : ORANGE"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_search"
-        android:title="@string/menu_search"
-        android:icon="@drawable/ic_search"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+        android:id="@+id/delete_all_memos"
+        android:title="@string/menu_delete_all_memos"
+        app:showAsAction="never" />
 </menu>

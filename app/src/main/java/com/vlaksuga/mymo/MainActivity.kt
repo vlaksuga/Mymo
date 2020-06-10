@@ -4,16 +4,17 @@ import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -31,14 +32,19 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val ADD_MEMO_REQUEST: Int = 1
         const val EDIT_MEMO_REQUEST: Int = 2
+        const val DELETE_MEMO_REQUEST: Int = 3
     }
 
     private lateinit var memoViewModel: MemoViewModel
     private lateinit var searchView: SearchView
+    private lateinit var fab: FloatingActionButton
     lateinit var adapter: MemoAdapter
 
-    private var swipeBackGround: ColorDrawable = ColorDrawable(Color.parseColor("#333333"))
+
+    private var swipeBackGround: ColorDrawable =
+        ColorDrawable(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
     private lateinit var deleteIcon: Drawable
+    private var barColorCurrent: String = AddEditActivity.COLOR_PLAIN
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,9 +52,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
+        // 툴바
+        setSupportActionBar(toolbar)
+        toolbar_layout.apply {
+            setExpandedTitleTextAppearance(R.style.CollapsedAppBar_Expand)
+            title = "BY COLORS"
+        }
+
+        // 리스트 없을 때 안 보이기 우선 처리
+        list_is_empty_view.visibility = View.GONE
+
         // 어댑터
         adapter = MemoAdapter(this)
-
 
         // 리사이클러뷰
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
@@ -56,32 +71,30 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        // 리스트 카운터 달기
 
-
-
-        // 플로팅 액션 버튼 -> 새로만들기 인텐트
-        val fab = findViewById<FloatingActionButton>(R.id.fab_add)
+        // 플로팅 액션 버튼
+        fab = findViewById(R.id.fab_add)
+        fab.backgroundTintList =
+            ColorStateList.valueOf(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
         fab.setOnClickListener {
-            val intent = Intent(this@MainActivity, AddEditActivity::class.java)
-            startActivityForResult(intent, ADD_MEMO_REQUEST)
+            colorFilter()
         }
 
         // 뷰 모델
         memoViewModel = ViewModelProvider(this).get(MemoViewModel::class.java)
         memoViewModel.allMemos.observe(this, Observer { memos ->
             memos?.let {
-                list_is_empty_view.visibility = View.GONE
                 adapter.setMemos(it)
-
                 // 메모가 없을 때 보여주기
-                if(adapter.itemCount < 1) {
+                if (adapter.itemCount < 1) {
                     list_is_empty_view.visibility = View.VISIBLE
+                } else {
+                    list_is_empty_view.visibility = View.GONE
                 }
             }
         })
 
-        // 스와이프로 삭제하기
+        // 스와이프로 삭제하기 콜백
         deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)!!
         val itemTouchHelperRightCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -94,14 +107,24 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                memoViewModel.delete(adapter.getMemoAt(viewHolder.adapterPosition))
+                val selectedMemo = adapter.getMemoAt(viewHolder.adapterPosition)
+                memoViewModel.delete(selectedMemo)
 
                 // 검색 중에 삭제했다면 검색결과 없애버리기
                 if (!searchView.isIconified) {
                     searchView.isIconified = true
                 }
-                Snackbar.make(recyclerView, "삭제되었습니다.", Snackbar.LENGTH_SHORT).show()
-                // TODO : DIALOG OR CUSTOM SNACK BAR FOR CONFIRM TO DELETE
+
+                Snackbar.make(
+                    recyclerView,
+                    getString(R.string.onswiped_delete),
+                    Snackbar.LENGTH_LONG
+                )
+                    .setAction(getString(R.string.undo), View.OnClickListener {
+                        memoViewModel.insert(selectedMemo)
+                    })
+                    .setActionTextColor(Color.parseColor(getString(R.string.undo_text_color)))
+                    .show()
             }
 
             override fun onChildDraw(
@@ -158,6 +181,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // 스와이프 콜백 뷰에 붙이기
         val itemTouchHelperRight = ItemTouchHelper(itemTouchHelperRightCallback)
         itemTouchHelperRight.attachToRecyclerView(recyclerView)
 
@@ -170,17 +194,25 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra(AddEditActivity.EXTRA_REPLY_TITLE, memo.memoTitle)
                 intent.putExtra(AddEditActivity.EXTRA_REPLY_CONTENT, memo.memoContent)
                 intent.putExtra(AddEditActivity.EXTRA_REPLY_COLOR, memo.barColor)
+                intent.putExtra(AddEditActivity.EXTRA_REPLY_INIT_TIME, memo.initTime)
                 startActivityForResult(intent, EDIT_MEMO_REQUEST)
             }
         })
 
     }
 
+    // 새로 만들기 인텐트
+    private fun addNewMemo() {
+        val intent = Intent(this@MainActivity, AddEditActivity::class.java)
+        intent.putExtra(AddEditActivity.EXTRA_REPLY_COLOR, barColorCurrent)
+        startActivityForResult(intent, ADD_MEMO_REQUEST)
+    }
+
     // 결과에 따라 인텐트 실행
     override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
         super.onActivityResult(requestCode, resultCode, intentData)
 
-        // 새로 만들기 인텐트
+        // 새로 만들기 인텐트로 부터
         if (requestCode == ADD_MEMO_REQUEST && resultCode == Activity.RESULT_OK) {
             intentData?.let { data ->
                 val memo = Memo(
@@ -193,16 +225,30 @@ class MainActivity : AppCompatActivity() {
                 memoViewModel.insert(memo)
                 Unit
             }
+
+            // 카테고리 되돌리기
+            toolbar_layout.title = "BY COLORS"
+            fab.backgroundTintList =
+                ColorStateList.valueOf(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
+            title_color_view.setBackgroundColor(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
+
+
             if (!searchView.isIconified) {
+                searchView.isIconified = true
+                searchView.isIconified = true
+            }
+
+            if (searchView.query.isEmpty()) {
                 searchView.isIconified = true
             }
         }
 
-        // 편집하기 인텐트
+        // 편집하기 인텐트로 부터
         else if (requestCode == EDIT_MEMO_REQUEST && resultCode == Activity.RESULT_OK) {
             val id: Int = intentData!!.getIntExtra(AddEditActivity.EXTRA_REPLY_ID, -1)
             if (id == -1) {
-                Toast.makeText(this, getString(R.string.update_fail), Toast.LENGTH_SHORT).show()
+                Snackbar.make(recyclerView, getString(R.string.update_fail), Snackbar.LENGTH_SHORT)
+                    .show()
                 return
             }
             // 편집된 데이터 적용
@@ -218,18 +264,37 @@ class MainActivity : AppCompatActivity() {
                 Unit
             }
 
-            // 검색 결과 되돌리기
+            // 카테고리 되돌리기
+            toolbar_layout.title = "BY COLORS"
+
+            fab.backgroundTintList =
+                ColorStateList.valueOf(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
+            title_color_view.setBackgroundColor(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
+
             if (!searchView.isIconified) {
                 searchView.isIconified = true
             }
+
+            if (searchView.query.isEmpty()) {
+                searchView.isIconified = false
+            }
         }
-        // 둘 다 아닌 경우 또는 취소
+
+        // 메모를 바로 삭제하고 액티비티 종료됨
+        else if (requestCode == DELETE_MEMO_REQUEST) {
+            // 카테고리 되돌리기
+
+            Snackbar.make(recyclerView, getString(R.string.memo_deleted), Snackbar.LENGTH_SHORT)
+                .show()
+        }
+
+        // 모두 아닌 경우
         else {
 
         }
     }
 
-    // 메뉴바 설정
+    // 메뉴 바 설정
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
 
@@ -252,18 +317,34 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         })
+
         return true
     }
 
-    // 메뉴 버튼 설정
+    // 메뉴 아이템 옵션 설정
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
 
             // 모두 삭제
             R.id.delete_all_memos -> apply {
-                memoViewModel.deleteAll()
-                Toast.makeText(this, getString(R.string.delete_all_memo), Toast.LENGTH_SHORT).show()
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage(getString(R.string.delete_All_message))
+                builder.setPositiveButton("확인") { dialogInterface, i ->
+                    memoViewModel.deleteAll()
+                    Snackbar.make(
+                        recyclerView,
+                        getString(R.string.delete_all_memo),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                builder.setNegativeButton("취소") { dialogInterface, i ->
+                    dialogInterface.dismiss()
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
             }
+
+            R.id.add_memo_menu -> addNewMemo()
 
             // 앱 공유
             R.id.share_app -> apply {
@@ -277,21 +358,78 @@ class MainActivity : AppCompatActivity() {
 
             // 제목 검색
             R.id.action_search -> apply {
+                getAllMemo()
                 return true
             }
 
-            // TODO ("컬러별로 나오게 만들기")
-            R.id.get_orange_memo -> apply {
-                adapter.notifyDataSetChanged()
-                Toast.makeText(this, "ORANGE", Toast.LENGTH_SHORT).show()
-            }
-            // 예외처리
+            R.id.memo_color_filter -> colorFilter()
+
             else -> return super.onOptionsItemSelected(item)
         }
         return super.onOptionsItemSelected(item)
     }
 
-    // 뒤로가기시 아이콘 돌리기
+    private fun getAllMemo() {
+        adapter.getColor("")
+        barColorCurrent = AddEditActivity.COLOR_PLAIN
+        toolbar_layout.title = "BY COLORS"
+        fab.backgroundTintList =
+            ColorStateList.valueOf(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
+        title_color_view.setBackgroundColor(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
+        Snackbar.make(recyclerView, getString(R.string.filter_all), Snackbar.LENGTH_SHORT)
+            .setBackgroundTint(Color.parseColor(AddEditActivity.COLOR_DEFAULT)).show()
+    }
+
+    private fun colorFilter() {
+        val colorSelectBuilder = AlertDialog.Builder(this)
+        val colorNames = arrayOf(
+            "전체",
+            getString(R.string.color_name_important),
+            getString(R.string.color_name_success),
+            getString(R.string.color_name_information),
+            getString(R.string.color_name_warning),
+            getString(R.string.color_name_danger),
+            getString(R.string.color_name_plain)
+        )
+        val colors = arrayOf(
+            "",
+            AddEditActivity.COLOR_IMPORTANT,
+            AddEditActivity.COLOR_SUCCESS,
+            AddEditActivity.COLOR_INFORMATION,
+            AddEditActivity.COLOR_WARNING,
+            AddEditActivity.COLOR_DANGER,
+            AddEditActivity.COLOR_PLAIN
+        )
+        colorSelectBuilder
+            .setTitle("카테고리 선택")
+            .setItems(
+                colorNames
+            ) { dialog, position ->
+                if (position == 0) {
+                    getAllMemo()
+                } else {
+                    listChangeByColor(colors[position], colorNames[position])
+                }
+            }
+
+            .setNegativeButton(
+                getString(R.string.negative_button)
+            ) { dialog, which -> dialog?.dismiss() }
+
+        colorSelectBuilder.show()
+    }
+
+    private fun listChangeByColor(color: String, name: String) {
+        adapter.getColor(color)
+        barColorCurrent = color
+        toolbar_layout.title = name
+        fab.backgroundTintList = ColorStateList.valueOf(Color.parseColor(color))
+        title_color_view.setBackgroundColor(Color.parseColor(color))
+        Snackbar.make(recyclerView, name, Snackbar.LENGTH_SHORT)
+            .setBackgroundTint(Color.parseColor(color)).show()
+    }
+
+    // 뒤로가기
     override fun onBackPressed() {
         if (!searchView.isIconified) {
             searchView.isIconified = true

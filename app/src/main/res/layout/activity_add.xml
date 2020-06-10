@@ -12,12 +12,12 @@
     <EditText
         android:id="@+id/title_editText"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:background="@android:color/transparent"
         android:hint="@string/hint_title"
         android:inputType="text"
-        android:padding="8dp"
-        android:textSize="14sp"
+        android:padding="16dp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,24 +27,37 @@
         android:id="@+id/divide_line_view"
         android:layout_width="0dp"
         android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:background="#CCCCCC"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/content_editText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_editText">
-    </View>
+        app:layout_constraintTop_toBottomOf="@+id/title_editText"/>
+
+    <TextView
+        android:id="@+id/latestDate_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/latest_time"
+        android:textColor="#cccccc"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divide_line_view" />
 
     <EditText
         android:id="@+id/content_editText"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
         android:background="@android:color/transparent"
         android:gravity="start|top"
         android:hint="@string/hint_word"
-        android:padding="8dp"
-        android:textSize="14sp"
+        android:padding="16dp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/currentColor_textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,59 +71,76 @@
         android:clickable="true"
         android:padding="16dp"
         android:text="@string/hint_default_color"
+        android:textStyle="bold"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/button_color_red"
+        android:id="@+id/button_color_important"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/ic_tag_red_24dp"
+        android:background="@drawable/ic_lens"
+        android:backgroundTint="@color/colorImportant"
         app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/button_color_orange"
+        android:id="@+id/button_color_success"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/ic_tag_orange_24dp"
+        android:background="@drawable/ic_lens"
+        android:backgroundTint="@color/colorSuccess"
         app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
-        app:layout_constraintStart_toEndOf="@+id/button_color_red" />
+        app:layout_constraintStart_toEndOf="@+id/button_color_important" />
 
     <ImageButton
-        android:id="@+id/button_color_green"
+        android:id="@+id/button_color_information"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/ic_tag_green_24dp"
+        android:background="@drawable/ic_lens"
+        android:backgroundTint="@color/colorInformation"
         app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
-        app:layout_constraintStart_toEndOf="@+id/button_color_orange" />
+        app:layout_constraintStart_toEndOf="@+id/button_color_success" />
 
     <ImageButton
-        android:id="@+id/button_color_blue"
+        android:id="@+id/button_color_warning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/ic_tag_blue_24dp"
+        android:background="@drawable/ic_lens"
+        android:backgroundTint="@color/colorWarning"
         app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
-        app:layout_constraintStart_toEndOf="@+id/button_color_green" />
+        app:layout_constraintStart_toEndOf="@+id/button_color_information" />
 
     <ImageButton
-        android:id="@+id/button_color_black"
+        android:id="@+id/button_color_danger"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/ic_tag_black_24dp"
+        android:background="@drawable/ic_lens"
+        android:backgroundTint="@color/colorDanger"
         app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
-        app:layout_constraintStart_toEndOf="@+id/button_color_blue" />
+        app:layout_constraintStart_toEndOf="@+id/button_color_warning" />
+
+    <ImageButton
+        android:id="@+id/button_color_plain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/ic_lens"
+        android:backgroundTint="@color/colorPlain"
+        app:layout_constraintBottom_toTopOf="@+id/currentColor_textView"
+        app:layout_constraintStart_toEndOf="@+id/button_color_danger" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

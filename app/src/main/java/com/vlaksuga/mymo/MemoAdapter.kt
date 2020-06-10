@@ -1,7 +1,6 @@
 package com.vlaksuga.mymo
 
 
-
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -15,14 +14,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MemoAdapter internal constructor(context: Context)  :
-    RecyclerView.Adapter<MemoAdapter.MemoViewHolder> (), Filterable {
+class MemoAdapter internal constructor(context: Context) :
+    RecyclerView.Adapter<MemoAdapter.MemoViewHolder>(), Filterable {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var memos = emptyList<Memo>()
 
     private lateinit var listener: onItemClickListener
-    internal var filterListResult : List<Memo> = memos
+    internal var filterListResult: List<Memo> = memos
 
     inner class MemoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardItemView: CardView = itemView.findViewById(R.id.holder_cardView)
@@ -65,6 +64,7 @@ class MemoAdapter internal constructor(context: Context)  :
         notifyDataSetChanged()
     }
 
+
     fun getMemoAt(position: Int): Memo {
         return memos[position]
     }
@@ -77,22 +77,21 @@ class MemoAdapter internal constructor(context: Context)  :
         this.listener = listener
     }
 
+
     // 필터
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(charString: CharSequence?): FilterResults {
 
                 // 검색으로 인한 필터
-                val charSearch : String = charString.toString().trim()
+                val charSearch: String = charString.toString().trim()
                 filterListResult = if (charSearch.isEmpty()) {
                     memos
                 } else {
                     val resultList = ArrayList<Memo>()
-                    for(row in memos) {
-                        if(row.memoTitle.toLowerCase(Locale.ROOT).contains(charSearch.toLowerCase(
-                                Locale.ROOT
-                            )
-                            )
+                    for (row in memos) {
+                        if (row.memoTitle.toLowerCase(Locale.ROOT)
+                                .contains(charSearch.toLowerCase(Locale.ROOT))
                         )
                             resultList.add(row)
                     }
@@ -114,4 +113,16 @@ class MemoAdapter internal constructor(context: Context)  :
         }
     }
 
+
+    // 컬러로 필터링
+    fun getColor(color: String) {
+        val resultList = ArrayList<Memo>()
+        for (row in memos) {
+            if(row.barColor.contains(color)) {
+                resultList.add(row)
+            }
+        }
+        filterListResult = resultList
+        notifyDataSetChanged()
+    }
 }

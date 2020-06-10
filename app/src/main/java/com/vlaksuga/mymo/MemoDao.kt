@@ -5,7 +5,7 @@ import androidx.room.*
 
 @Dao
 interface MemoDao {
-    @Query("SELECT * from memo_table ORDER BY _id DESC")
+    @Query("SELECT * from memo_table ORDER BY init_time DESC")
     fun getCurrentIdAll(): LiveData<List<Memo>>
 
     @Query("SELECT * from memo_table WHERE bar_color is '#FF8800'")
@@ -22,5 +22,4 @@ interface MemoDao {
 
     @Query("Delete from memo_table")
     suspend fun deleteAll()
-    // TODO 컬러로 필터 만들기
 }
