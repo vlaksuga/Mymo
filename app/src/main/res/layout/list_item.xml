@@ -61,7 +61,7 @@
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="내용이 나오는 곳이 길어지면 어떻게 할라고 그러는지가 저는 엄청 궁금합니다"
+                android:text="내용이 나오는 곳이 길어지면 어떻게 할라고 "
                 app:fontFamily="@font/roboto_bold"
                 app:layout_constraintStart_toEndOf="@+id/colorBar_textView"
                 app:layout_constraintTop_toBottomOf="@+id/initDate_textView" />
@@ -73,6 +73,17 @@
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/important_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="14dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_lock_black" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

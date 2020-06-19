@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin : 'kotlin-kapt'
+apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
-    kapt { generateStubs = true }
+    // kapt { generateStubs = true }
     defaultConfig {
         applicationId "com.vlaksuga.mymo"
         minSdkVersion 26
@@ -27,6 +27,7 @@ android {
         exclude 'META-INF/atomicfu.kotlin_module'
     }
 
+
 }
 
 dependencies {
@@ -39,6 +40,7 @@ dependencies {
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
     implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
     androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
 
@@ -58,8 +60,12 @@ dependencies {
     // Testing
     testImplementation 'junit:junit:4.12'
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
-    androidTestImplementation ('androidx.test.espresso:espresso-core:3.1.0', {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+
+    // ColorPicker
+    implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
+
 }

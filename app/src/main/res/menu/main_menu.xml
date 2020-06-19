@@ -17,14 +17,20 @@
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/memo_color_filter"
-        android:title="카테고리"
+        android:title="그룹 선택"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/share_app"
-        android:title="@string/menu_share_this_app"
-        app:showAsAction="never"/>
+
     <item
         android:id="@+id/delete_all_memos"
         android:title="@string/menu_delete_all_memos"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/go_intro"
+        android:title="인트로"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/group_config"
+        android:title="그룹 설정"
+        app:showAsAction="never"/>
 </menu>

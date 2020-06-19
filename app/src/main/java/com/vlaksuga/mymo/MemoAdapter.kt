@@ -2,12 +2,14 @@ package com.vlaksuga.mymo
 
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
@@ -18,10 +20,14 @@ class MemoAdapter internal constructor(context: Context) :
     RecyclerView.Adapter<MemoAdapter.MemoViewHolder>(), Filterable {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var memos = emptyList<Memo>()
 
-    private lateinit var listener: onItemClickListener
-    internal var filterListResult: List<Memo> = memos
+    private var memos = emptyList<Memo>()
+    private var groups = emptyList<Group>()
+
+    private lateinit var listener: OnItemClickListener
+
+    internal var filterMemoListResult: List<Memo> = memos
+    internal var filterGroupListResult: List<Group> = groups
 
     inner class MemoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardItemView: CardView = itemView.findViewById(R.id.holder_cardView)
@@ -30,6 +36,7 @@ class MemoAdapter internal constructor(context: Context) :
         val initDateItemView: TextView = itemView.findViewById(R.id.initDate_textView)
         val initTimeItemView: TextView = itemView.findViewById(R.id.initTime_textView)
         val barColorItemView: TextView = itemView.findViewById(R.id.colorBar_textView)
+        val importantItemView: ImageView = itemView.findViewById(R.id.important_imageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoViewHolder {
@@ -38,42 +45,48 @@ class MemoAdapter internal constructor(context: Context) :
     }
 
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
-        val current = filterListResult[position]
+        val currentMemo = filterMemoListResult[position]
         holder.cardItemView.setOnClickListener {
             if (position != RecyclerView.NO_POSITION) {
-                listener.onItemClick(filterListResult[position])
+                listener.onItemClick(filterMemoListResult[position])
             }
         }
+        if (currentMemo.isImportant) {
+            holder.importantItemView.visibility = View.VISIBLE
+        } else {
+            holder.importantItemView.visibility = View.GONE
+        }
+
         val dateSimpleDateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.ROOT)
         val timeSimpleDateFormat = SimpleDateFormat("a hh:mm", Locale.ROOT)
 
-        holder.titleItemView.text = current.memoTitle
-        holder.contentItemView.text = current.memoContent
+        holder.titleItemView.text = currentMemo.memoTitle
+        holder.contentItemView.text = currentMemo.memoContent
         holder.initDateItemView.text =
-            dateSimpleDateFormat.format(Timestamp(current.initTime)).toString()
+            dateSimpleDateFormat.format(Timestamp(currentMemo.initTime)).toString()
         holder.initTimeItemView.text =
-            timeSimpleDateFormat.format(Timestamp(current.initTime)).toString()
-        holder.barColorItemView.setBackgroundColor(Color.parseColor(current.barColor))
+            timeSimpleDateFormat.format(Timestamp(currentMemo.initTime)).toString()
+        holder.barColorItemView.backgroundTintList = ColorStateList.valueOf(Color.parseColor(currentMemo.groupColor))
     }
 
-    override fun getItemCount() = filterListResult.size
+
+    override fun getItemCount() = filterMemoListResult.size
 
     internal fun setMemos(memos: List<Memo>) {
         this.memos = memos
-        filterListResult = memos
+        filterMemoListResult = memos
         notifyDataSetChanged()
     }
-
 
     fun getMemoAt(position: Int): Memo {
         return memos[position]
     }
 
-    public interface onItemClickListener {
+    public interface OnItemClickListener {
         fun onItemClick(memo: Memo) {}
     }
 
-    public fun setOnItemClickListener(listener: onItemClickListener) {
+    public fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
     }
 
@@ -85,7 +98,7 @@ class MemoAdapter internal constructor(context: Context) :
 
                 // 검색으로 인한 필터
                 val charSearch: String = charString.toString().trim()
-                filterListResult = if (charSearch.isEmpty()) {
+                filterMemoListResult = if (charSearch.isEmpty()) {
                     memos
                 } else {
                     val resultList = ArrayList<Memo>()
@@ -99,14 +112,14 @@ class MemoAdapter internal constructor(context: Context) :
                 }
 
                 val filterResults = FilterResults()
-                filterResults.values = filterListResult
+                filterResults.values = filterMemoListResult
                 return filterResults
             }
 
 
             @Suppress("UNCHECKED_CAST")
             override fun publishResults(charSquence: CharSequence?, filterResults: FilterResults?) {
-                filterListResult = filterResults!!.values as List<Memo>
+                filterMemoListResult = filterResults!!.values as List<Memo>
                 notifyDataSetChanged()
             }
 
@@ -115,14 +128,21 @@ class MemoAdapter internal constructor(context: Context) :
 
 
     // 컬러로 필터링
-    fun getColor(color: String) {
+    fun getListByGroupId(GroupId: Int) {
         val resultList = ArrayList<Memo>()
+
         for (row in memos) {
-            if(row.barColor.contains(color)) {
+            if (row.groupId == GroupId) {
                 resultList.add(row)
             }
         }
-        filterListResult = resultList
+
+        filterMemoListResult = resultList
+        notifyDataSetChanged()
+    }
+
+    fun getAllList() {
+        filterMemoListResult = memos
         notifyDataSetChanged()
     }
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/add_group_layout"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".GroupAddEditActivity">
+
+    <TextView
+        android:id="@+id/current_group_color_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:clickable="true"
+        android:maxLines="1"
+        android:padding="16dp"
+        android:text="색을 선택해주세요"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+
+
+    <EditText
+        android:id="@+id/group_name_editText"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        android:hint="@string/hint_title"
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/divide_line_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="#CCCCCC"/>
+
+    <EditText
+        android:id="@+id/group_desc_editText"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:maxLines="1"
+        android:inputType="text"
+        android:background="@android:color/transparent"
+        android:hint="@string/hint_word"
+        android:padding="16dp"
+        android:textSize="16sp"/>
+
+</LinearLayout>

@@ -9,14 +9,19 @@ import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.*
+import androidx.lifecycle.Observer
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 
 
-import kotlinx.android.synthetic.main.activity_add.*
+import kotlinx.android.synthetic.main.activity_add_edit.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,119 +30,201 @@ class AddEditActivity : AppCompatActivity() {
 
     companion object {
         // EXTRA KEYS
+        const val EXTRA_REPLY_THEME_COLOR = "com.vlaksuga.mymo.THEME_COLOR"
+        const val EXTRA_REPLY_FILTER_STATE = "com.vlaksuga.mymo.FILTER_STATE"
         const val EXTRA_REPLY_ID = "com.vlaksuga.mymo.ID"
         const val EXTRA_REPLY_TITLE = "com.vlaksuga.mymo.TITLE"
         const val EXTRA_REPLY_CONTENT = "com.vlaksuga.mymo.CONTENT"
         const val EXTRA_REPLY_INIT_TIME = "com.vlaksuga.mymo.INIT_TIME"
-        const val EXTRA_REPLY_COLOR = "com.vlaksuga.mymo.COLOR"
-
+        const val EXTRA_REPLY_IMPORTANCE = "com.vlaksuga.mymo.IMPORTANCE"
+        const val EXTRA_REPLY_GROUP_ID = "com.vlaksuga.mymo.GROUP_ID"
+        const val EXTRA_REPLY_GROUP_COLOR = "com.vlaksuga.mymo.GROUP_COLOR"
+        const val EXTRA_REPLY_GROUP_NAME = "com.vlaksuga.mymo.GROUP_NAME"
 
         // COLORS
-        const val COLOR_DEFAULT = "#333333"
-        const val COLOR_IMPORTANT = "#0275d8"
-        const val COLOR_SUCCESS = "#5cb85c"
-        const val COLOR_INFORMATION = "#5bc0de"
-        const val COLOR_WARNING = "#f0ad4e"
-        const val COLOR_DANGER = "#d9534f"
-        const val COLOR_PLAIN = "#000000"
+        const val COLOR_DEFAULT = "#292B2C"
+
+        // DEFAULT
+        const val GROUP_NAME_DEFAULT = "그룹 없음"
+
     }
 
-    private lateinit var memoViewModel: MemoViewModel
+    private lateinit var viewModel: ViewModel
+    private lateinit var menu: Menu
+    lateinit var adapter: GroupSelectListAdapter
 
-    private var currentColor: String
+    private var currentFilterState: Int
+    private var currentThemeColor: String
+    private var currentTime: Long
+    private var currentImportance: Boolean
+    private var currentGroupId: Int
+    private var currentGroupName: String
+    private var currentGroupColor: String
+
+
     init {
-        currentColor = COLOR_PLAIN
+        currentFilterState = 0
+        currentThemeColor = COLOR_DEFAULT
+        currentTime = Date().time
+        currentImportance = false
+        currentGroupId = 1
+        currentGroupName = GROUP_NAME_DEFAULT
+        currentGroupColor = COLOR_DEFAULT
     }
 
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add)
+        setContentView(R.layout.activity_add_edit)
 
-        // 뷰 모델델
-       memoViewModel = ViewModelProvider(this).get(MemoViewModel::class.java)
-
-        // 인텐트 받아옴
-        intent
-
-        // 컬러 감지해서 적용하기
-        when (intent.getStringExtra(EXTRA_REPLY_COLOR)) {
-            COLOR_IMPORTANT -> changeBarColor(COLOR_IMPORTANT, getString(R.string.color_name_important))
-            COLOR_SUCCESS -> changeBarColor(COLOR_SUCCESS, getString(R.string.color_name_success))
-            COLOR_INFORMATION -> changeBarColor(COLOR_INFORMATION, getString(R.string.color_name_information))
-            COLOR_WARNING -> changeBarColor(COLOR_WARNING, getString(R.string.color_name_warning))
-            COLOR_DANGER -> changeBarColor(COLOR_DANGER, getString(R.string.color_name_danger))
-            else -> changeBarColor(COLOR_PLAIN, getString(R.string.color_name_plain))
-        }
-
-
-        // 메뉴에 뒤로가기를 X로
+        Log.d("onCreate.add.currentFilterState.rockteki", currentFilterState.toString())
+        Log.d("onCreate.add.currentGroupId.rockteki", currentGroupId.toString())
+        // 타이틀
+        supportActionBar!!.title = null
+        supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor(currentThemeColor)))
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close)
 
-        // 컬러바 버튼 안보이기
-        button_color_important.visibility = View.GONE
-        button_color_success.visibility = View.GONE
-        button_color_information.visibility = View.GONE
-        button_color_warning.visibility = View.GONE
-        button_color_danger.visibility = View.GONE
-        button_color_plain.visibility = View.GONE
 
-        // 인텐트에 ID가 있을시(EDIT)의 화면 구성
+        // 뷰 모델
+        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        viewModel.allGroups.observe(this, Observer { groups ->
+            groups?.let {
+                adapter.setGroups(it)
+            }
+        })
+
+        // 어댑터
+        adapter = GroupSelectListAdapter(this)
+
+        // 리사이클러뷰
+        val groupListRecyclerView = findViewById<RecyclerView>(R.id.group_list_recyclerView)
+        groupListRecyclerView.setHasFixedSize(true)
+        groupListRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        groupListRecyclerView.adapter = adapter
+        groupListRecyclerView.visibility = View.GONE
+
+
+        // 아이템 클릭 -> 편집 인텐트
+        adapter.setOnItemClickListener(object : GroupSelectListAdapter.OnItemClickListener {
+            override fun onItemClick(group: Group) {
+                currentGroupId = group.groupId
+                currentThemeColor = group.groupColor
+                currentGroupName = group.groupName
+                currentGroupColor = group.groupColor
+                currentColor_textView.apply {
+                    text = currentGroupName
+                    background = ColorDrawable(Color.parseColor(currentThemeColor))
+                    supportActionBar!!.setBackgroundDrawable(
+                        ColorDrawable(
+                            Color.parseColor(
+                                currentThemeColor
+                            )
+                        )
+                    )
+                }
+                Log.d("onItemClick.add.currentFilterState.rockteki", currentFilterState.toString())
+                Log.d("onItemClick.add.currentGroupId.rockteki", currentGroupId.toString())
+            }
+        })
+
+
+        // 편집 화면 구성
         if (intent.hasExtra(EXTRA_REPLY_ID)) {
-            val dateSimpleDateFormat = SimpleDateFormat(getString(R.string.date_format), Locale.ROOT)
-            val latestDate : String = dateSimpleDateFormat.format(intent.getLongExtra(EXTRA_REPLY_INIT_TIME, 0)).toString()
+            val dateSimpleDateFormat =
+                SimpleDateFormat(getString(R.string.date_format), Locale.ROOT)
+            val latestDate: String =
+                dateSimpleDateFormat.format(intent.getLongExtra(EXTRA_REPLY_INIT_TIME, 0))
+                    .toString()
+
             title_editText.setText(intent.getStringExtra(EXTRA_REPLY_TITLE))
             content_editText.setText(intent.getStringExtra(EXTRA_REPLY_CONTENT))
             latestDate_textView.text = latestDate
-            latestDate_textView.visibility = View.VISIBLE
-            supportActionBar!!.title = null
-            supportActionBar!!.setBackgroundDrawable(object : ColorDrawable( Color.parseColor(intent.getStringExtra(EXTRA_REPLY_COLOR))) {})
+            currentFilterState = intent.getIntExtra(EXTRA_REPLY_FILTER_STATE, 0)
+            currentThemeColor = intent.getStringExtra(EXTRA_REPLY_GROUP_COLOR)!!
+            currentImportance = intent.getBooleanExtra(EXTRA_REPLY_IMPORTANCE, false)
+            currentGroupId = intent.getIntExtra(EXTRA_REPLY_GROUP_ID, 1)
+            currentGroupColor = intent.getStringExtra(EXTRA_REPLY_GROUP_COLOR)!!
+            currentGroupName = intent.getStringExtra(EXTRA_REPLY_GROUP_NAME)!!
+
+            // 아래 컬러바
+            currentColor_textView.apply {
+                text = currentGroupName
+                background = ColorDrawable(Color.parseColor(currentThemeColor))
+            }
+            // 액션바
+            supportActionBar!!.title = ""
+            supportActionBar!!.setBackgroundDrawable(object :
+                ColorDrawable(Color.parseColor(currentThemeColor)) {})
+
+            Log.d("editmode.add.currentFilterState.rockteki", currentFilterState.toString())
+            Log.d("editmode.add.currentGroupId.rockteki", currentGroupId.toString())
         }
 
-        // 인텐트에 ID가 없을시(ADD)의 화면 구성
-        else {
-            supportActionBar!!.title = getString(R.string.add_activity_title)
-            supportActionBar!!.setBackgroundDrawable(object : ColorDrawable( Color.parseColor(currentColor)) {})
+        // 추가 화면 구성
+        if (currentFilterState != 0) {
+            currentGroupId = 1
+            Log.d(
+                "newmode.currentFilterState !=0.add.currentFilterState.rockteki",
+                currentFilterState.toString()
+            )
+            Log.d(
+                "newmode.currentFilterState !=0.add.currentGroupId.rockteki",
+                currentGroupId.toString()
+            )
         }
+
+
+        val dateSimpleDateFormat =
+            SimpleDateFormat(getString(R.string.date_format), Locale.ROOT)
+        val nowDate: String =
+            dateSimpleDateFormat.format(currentTime)
+                .toString()
+        latestDate_textView.text = nowDate
+        currentFilterState = intent.getIntExtra(EXTRA_REPLY_FILTER_STATE, 0)
+        currentThemeColor = intent.getStringExtra(EXTRA_REPLY_GROUP_COLOR)!!
+        currentGroupId = intent.getIntExtra(EXTRA_REPLY_GROUP_ID, 1)
+        currentGroupColor = intent.getStringExtra(EXTRA_REPLY_GROUP_COLOR)!!
+        currentGroupName = intent.getStringExtra(EXTRA_REPLY_GROUP_NAME)!!
+
+
+        // 아래 컬러바
+        currentColor_textView.apply {
+            text = currentGroupName
+            background = ColorDrawable(Color.parseColor(currentThemeColor))
+        }
+
+        // 액션바
+        supportActionBar!!.setBackgroundDrawable(object :
+            ColorDrawable(Color.parseColor(currentThemeColor)) {})
+        Log.d("newmode.add.currentFilterState.rockteki", currentFilterState.toString())
+        Log.d("newmode.add.currentGroupId.rockteki", currentGroupId.toString())
+
 
         // 컬러바 클릭시 컬러 아이콘 토글
+
         currentColor_textView.setOnClickListener {
-            colorIconViewVisibilityToggle()
-        }
-
-        // 컬러 아이콘 클릭
-        button_color_important.setOnClickListener { changeBarColor(COLOR_IMPORTANT, getString(R.string.color_name_important))}
-        button_color_success.setOnClickListener { changeBarColor(COLOR_SUCCESS,  getString(R.string.color_name_success))}
-        button_color_information.setOnClickListener { changeBarColor(COLOR_INFORMATION, getString(R.string.color_name_information))}
-        button_color_warning.setOnClickListener { changeBarColor(COLOR_WARNING, getString(R.string.color_name_warning))}
-        button_color_danger.setOnClickListener { changeBarColor(COLOR_DANGER, getString(R.string.color_name_danger))}
-        button_color_plain.setOnClickListener { changeBarColor(COLOR_PLAIN, getString(R.string.color_name_plain)) }
-
-    }
-
-    // 컬러바 버튼 클릭시 토글
-    private fun colorIconViewVisibilityToggle() {
-        if(button_color_danger.visibility == View.VISIBLE) {
-            button_color_important.visibility = View.GONE
-            button_color_success.visibility = View.GONE
-            button_color_information.visibility = View.GONE
-            button_color_warning.visibility = View.GONE
-            button_color_danger.visibility = View.GONE
-            button_color_plain.visibility = View.GONE
-        } else {
-            button_color_important.visibility = View.VISIBLE
-            button_color_success.visibility = View.VISIBLE
-            button_color_information.visibility = View.VISIBLE
-            button_color_warning.visibility = View.VISIBLE
-            button_color_danger.visibility = View.VISIBLE
-            button_color_plain.visibility = View.VISIBLE
+            if (groupListRecyclerView.visibility == View.VISIBLE) {
+                groupListRecyclerView.visibility = View.GONE
+                color_toggle_icon.setBackgroundResource(R.drawable.ic_keyboard_arrow_up)
+            } else {
+                groupListRecyclerView.visibility = View.VISIBLE
+                color_toggle_icon.setBackgroundResource(R.drawable.ic_keyboard_arrow_down)
+            }
         }
     }
+
 
     // 메뉴 설정
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val menuInflater: MenuInflater = menuInflater
         menuInflater.inflate(R.menu.add_note_menu, menu)
+        this.menu = menu!!
+        if (intent.getBooleanExtra(EXTRA_REPLY_IMPORTANCE, false)) {
+            menu.getItem(1).icon = ContextCompat.getDrawable(this, R.drawable.ic_lock)
+        } else {
+            menu.getItem(1).icon = ContextCompat.getDrawable(this, R.drawable.ic_lock_open)
+        }
         return true
     }
 
@@ -145,6 +232,19 @@ class AddEditActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.save_memo -> saveMemo()
+            R.id.important_memu -> apply {
+                if (!currentImportance) {
+                    item.setIcon(R.drawable.ic_lock)
+                    currentImportance = true
+                    Toast.makeText(this@AddEditActivity, "삭제되지 않는 메모가 되었습니다..", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    item.setIcon(R.drawable.ic_lock_open)
+                    currentImportance = false
+                    Toast.makeText(this@AddEditActivity, "잠금 상태에서 해제되었습니다.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
             R.id.share_memo -> shareMemo()
             R.id.delete_this -> deleteThisMemo()
             else -> return super.onOptionsItemSelected(item)
@@ -153,20 +253,30 @@ class AddEditActivity : AppCompatActivity() {
     }
 
     private fun deleteThisMemo() {
-        if(intent.hasExtra(EXTRA_REPLY_ID)) {
+        if(currentImportance) {
+            Toast.makeText(this, "잠금상태에선 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (intent.hasExtra(EXTRA_REPLY_ID)) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage(getString(R.string.delete_this_message))
-            builder.setPositiveButton(getString(R.string.positive_button)) { dialogInterface: DialogInterface, i: Int ->
-                memoViewModel.delete(Memo(
-                    intent.getIntExtra(EXTRA_REPLY_ID,-1),
-                    intent.getStringExtra(EXTRA_REPLY_TITLE)!!,
-                    intent.getStringExtra(EXTRA_REPLY_CONTENT)!!,
-                    intent.getLongExtra(EXTRA_REPLY_INIT_TIME, 0),
-                    intent.getStringExtra(EXTRA_REPLY_COLOR)!!))
+            builder.setPositiveButton(getString(R.string.positive_button)) { _: DialogInterface, _: Int ->
+                viewModel.delete(
+                    Memo(
+                        intent.getIntExtra(EXTRA_REPLY_ID, -1),
+                        intent.getStringExtra(EXTRA_REPLY_TITLE)!!,
+                        intent.getStringExtra(EXTRA_REPLY_CONTENT)!!,
+                        intent.getLongExtra(EXTRA_REPLY_INIT_TIME, 0),
+                        intent.getBooleanExtra(EXTRA_REPLY_IMPORTANCE, false),
+                        intent.getIntExtra(EXTRA_REPLY_GROUP_ID, 1),
+                        intent.getStringExtra(EXTRA_REPLY_GROUP_COLOR)!!,
+                        intent.getStringExtra(EXTRA_REPLY_GROUP_NAME)!!
+                    )
+                )
                 finish()
                 Toast.makeText(this, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
             }
-            builder.setNegativeButton(getString(R.string.negative_button)) { dialogInterface: DialogInterface, i: Int ->
+            builder.setNegativeButton(getString(R.string.negative_button)) { dialogInterface: DialogInterface, _: Int ->
                 dialogInterface.dismiss()
             }
             builder.show()
@@ -178,7 +288,11 @@ class AddEditActivity : AppCompatActivity() {
     // 해당 메모 공유 인텐트
     private fun shareMemo() {
         if (title_editText.text.isEmpty() or content_editText.text.isEmpty()) {
-            Snackbar.make(findViewById(R.id.add_layout), getString(R.string.memo_is_empty), Snackbar.LENGTH_SHORT)
+            Snackbar.make(
+                findViewById(R.id.add_layout),
+                getString(R.string.memo_is_empty),
+                Snackbar.LENGTH_SHORT
+            )
                 .show()
             return
         }
@@ -195,25 +309,35 @@ class AddEditActivity : AppCompatActivity() {
     // 저장하기 인텐트
     private fun saveMemo() {
         val resultTitle = title_editText?.text
+        var title = resultTitle.toString()
+
         val resultContent = content_editText?.text
+        val content = resultContent.toString()
+
         val initTime: Long = Date().time
         val replyIntent = Intent()
 
         if (TextUtils.isEmpty(resultTitle)) {
-            Snackbar.make(add_layout,getString(R.string.insert_title), Snackbar.LENGTH_SHORT).show()
-            return
+            title = "제목없음"
         }
         if (TextUtils.isEmpty(resultContent)) {
-            Snackbar.make(add_layout,getString(R.string.insert_memo), Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(add_layout, getString(R.string.insert_memo), Snackbar.LENGTH_SHORT).show()
             return
         }
 
-        val title = resultTitle.toString()
-        val content = resultContent.toString()
-        replyIntent.putExtra(EXTRA_REPLY_TITLE, title)
-        replyIntent.putExtra(EXTRA_REPLY_CONTENT, content)
-        replyIntent.putExtra(EXTRA_REPLY_INIT_TIME, initTime)
-        replyIntent.putExtra(EXTRA_REPLY_COLOR, currentColor)
+
+        // Memo()를 생성하기 위한 엑스트라(memo_id는 자동으로 생성됨)
+        replyIntent.putExtra(EXTRA_REPLY_TITLE, title) // memoTitle
+        replyIntent.putExtra(EXTRA_REPLY_CONTENT, content) // memoContent
+        replyIntent.putExtra(EXTRA_REPLY_INIT_TIME, initTime) // initTime
+        replyIntent.putExtra(EXTRA_REPLY_IMPORTANCE, currentImportance) // isImportant
+        replyIntent.putExtra(EXTRA_REPLY_GROUP_ID, currentGroupId) // groupId
+        replyIntent.putExtra(EXTRA_REPLY_GROUP_COLOR, currentGroupColor) // groupColor
+        replyIntent.putExtra(EXTRA_REPLY_GROUP_NAME, currentGroupName) // groupName
+        replyIntent.putExtra(
+            EXTRA_REPLY_FILTER_STATE,
+            currentFilterState
+        ) // filterStateFrom MainActivity
 
         // 편집으로 아이디 값을 인텐트로 받아왔을 때 아이디 덮어쓰기
         val id: Int = intent.getIntExtra(EXTRA_REPLY_ID, -1)
@@ -222,14 +346,10 @@ class AddEditActivity : AppCompatActivity() {
         }
 
         setResult(Activity.RESULT_OK, replyIntent)
+        Log.d("save.add.currentFilterState.rockteki", currentFilterState.toString())
+        Log.d("save.add.currentGroupId.rockteki", currentGroupId.toString())
         finish()
-    }
 
-    // 컬러 바 바꾸기
-    private fun changeBarColor(colorCode: String, colorName: String) {
-        currentColor = colorCode
-        currentColor_textView.text = colorName
-        supportActionBar!!.setBackgroundDrawable(object : ColorDrawable( Color.parseColor(colorCode)) {})
-        currentColor_textView.setBackgroundColor(Color.parseColor(currentColor))
+
     }
 }

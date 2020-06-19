@@ -8,18 +8,20 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Memo::class], version = 1, exportSchema = false)
-abstract class MemoDatabase : RoomDatabase() {
+@Database(entities = [Memo::class, Group::class], version = 2, exportSchema = false)
+abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun memoDao(): MemoDao
+    abstract fun dao(): Dao
 
-    private class MemoDatabaseCallback(private val scope: CoroutineScope) :
+    private class AppDatabaseCallback(private val scope: CoroutineScope) :
         RoomDatabase.Callback() {
 
         override fun onOpen(db: SupportSQLiteDatabase) {
             super.onOpen(db)
             INSTANCE?.let {
                 scope.launch {
+                    // POPULATE GROUP ROW INIT
+                    it.dao().groupInsert(group = Group(1, "그룹 없음", "", "#292B2C"))
                 }
             }
         }
@@ -27,19 +29,19 @@ abstract class MemoDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE: MemoDatabase? = null
+        private var INSTANCE: com.vlaksuga.mymo.AppDatabase? = null
 
         fun getDatabase(
             context: Context,
             scope: CoroutineScope
-        ): MemoDatabase? {
+        ): com.vlaksuga.mymo.AppDatabase? {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context.applicationContext, MemoDatabase::class.java,
-                    "mymo_database"
+                    context.applicationContext, AppDatabase::class.java,
+                    "database.db"
                 )
                     .fallbackToDestructiveMigration()
-                    .addCallback(MemoDatabaseCallback(scope))
+                    .addCallback(AppDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
                 instance
