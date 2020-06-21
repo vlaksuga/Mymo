@@ -42,6 +42,10 @@ class GroupFilterAdapter internal constructor(context: Context) :
         }
         holder.titleItemView.text = current.groupName
         holder.barColorItemView.backgroundTintList = ColorStateList.valueOf(Color.parseColor(current.groupColor))
+        if(position == 0) {
+            holder.titleItemView.setTextColor(ColorStateList.valueOf(Color.parseColor("#DDDDDD")))
+            holder.barColorItemView.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#DDDDDD"))
+        }
     }
 
     override fun getItemCount() = filterListResult.size
@@ -50,41 +54,6 @@ class GroupFilterAdapter internal constructor(context: Context) :
         this.groups = groups
         filterListResult = groups
         notifyDataSetChanged()
-    }
-
-
-    fun getGroupAt(position: Int): Group {
-        return groups[position]
-    }
-
-    fun getAtId(id : Int): Group {
-        val resultList = ArrayList<Group>()
-        for (row in groups) {
-            if(row.groupId == id) {
-                resultList.add(row)
-            }
-        }
-        return resultList[0]
-    }
-
-    fun getColorAtId(id : Int): String {
-        val resultList = ArrayList<Group>()
-        for (row in groups) {
-            if(row.groupId == id) {
-                resultList.add(row)
-            }
-        }
-        return resultList[0].groupColor
-    }
-
-    fun getColorNameAtId(id: Int): String {
-        val resultList = ArrayList<Group>()
-        for (row in groups) {
-            if(row.groupId == id) {
-                resultList.add(row)
-            }
-        }
-        return resultList[0].groupName
     }
 
     public interface OnItemClickListener {
@@ -130,19 +99,4 @@ class GroupFilterAdapter internal constructor(context: Context) :
 
         }
     }
-
-
-    // 컬러로 필터링
-    fun getColor(color: String) {
-        val resultList = ArrayList<Group>()
-        for (row in groups) {
-            if(row.groupColor.contains(color)) {
-                resultList.add(row)
-            }
-        }
-        filterListResult = resultList
-        notifyDataSetChanged()
-    }
-
-
 }

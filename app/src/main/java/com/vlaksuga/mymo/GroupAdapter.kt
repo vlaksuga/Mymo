@@ -64,34 +64,11 @@ class GroupAdapter internal constructor(context: Context) :
         notifyDataSetChanged()
     }
 
-    internal fun setGroupColors(colors : List<String>)  {
-
-
-
-        currentGroupColors = colors
-        notifyDataSetChanged()
-    }
-
-
-    fun getGroupAt(position: Int): Group {
-        return groups[position]
-    }
-
-    fun getAtId(id: Int): Group {
-        val resultList = ArrayList<Group>()
-        for (row in groups) {
-            if (row.groupId == id) {
-                resultList.add(row)
-            }
-        }
-        return resultList[0]
-    }
-
     interface OnItemClickListener {
         fun onItemClick(group: Group) {}
     }
 
-    public fun setOnItemClickListener(listener: OnItemClickListener) {
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
     }
 

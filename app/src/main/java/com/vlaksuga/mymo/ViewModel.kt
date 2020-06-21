@@ -12,18 +12,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: Repository
     var allMemos: LiveData<List<Memo>>
     var allGroups : LiveData<List<Group>>
-    var allGroupNames : LiveData<List<String>>
-    var allGroupIds : LiveData<List<Int>>
-    var allGroupColors : LiveData<List<String>>
 
     init {
         val dao = AppDatabase.getDatabase(application, viewModelScope)!!.dao()
         repository = Repository(dao)
         allMemos = repository.allMemos
         allGroups = repository.allGroups
-        allGroupNames = repository.allGroupNames
-        allGroupIds = repository.allGroupIds
-        allGroupColors = repository.allGroupColors
     }
 
     fun insert(memo: Memo) = viewModelScope.launch(Dispatchers.IO) {

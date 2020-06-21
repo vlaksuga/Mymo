@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Memo::class, Group::class], version = 2, exportSchema = false)
+@Database(entities = [Memo::class, Group::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun dao(): Dao
@@ -21,7 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
             INSTANCE?.let {
                 scope.launch {
                     // POPULATE GROUP ROW INIT
-                    it.dao().groupInsert(group = Group(1, "그룹 없음", "", "#292B2C"))
+                    it.dao().groupInsert(group = Group(1, "그룹 없음", "분류되지 않은 메모들 입니다.", "#292B2C"))
                 }
             }
         }
