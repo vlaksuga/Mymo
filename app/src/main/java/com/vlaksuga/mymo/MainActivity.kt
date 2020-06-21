@@ -443,10 +443,10 @@ class MainActivity : AppCompatActivity() {
             R.id.add_memo_menu -> addNewMemo()
 
             // 인트로 (테스트
-            R.id.go_intro -> apply {
+/*            R.id.go_intro -> apply {
                 val introIntent = Intent(this, SwipeTutorial::class.java)
                 startActivity(introIntent)
-            }
+            }*/
 
             // 제목 검색
             R.id.action_search -> apply {

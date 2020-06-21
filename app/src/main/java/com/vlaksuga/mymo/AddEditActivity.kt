@@ -23,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 
 
 import kotlinx.android.synthetic.main.activity_add_edit.*
+import kotlinx.android.synthetic.main.activity_group_list.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -209,14 +210,43 @@ class AddEditActivity : AppCompatActivity() {
         currentColor_textView.setOnClickListener {
             if (groupListRecyclerView.visibility == View.VISIBLE) {
                 groupListRecyclerView.visibility = View.GONE
+                add_group_image.visibility = View.GONE
                 color_toggle_icon.setBackgroundResource(R.drawable.ic_keyboard_arrow_up)
             } else {
                 groupListRecyclerView.visibility = View.VISIBLE
+                add_group_image.visibility = View.VISIBLE
                 color_toggle_icon.setBackgroundResource(R.drawable.ic_keyboard_arrow_down)
             }
         }
+
+        add_group_image.setOnClickListener {
+            val addGroupIntent = Intent(this, GroupAddEditActivity::class.java)
+            groupListRecyclerView.visibility = View.VISIBLE
+            add_group_image.visibility = View.VISIBLE
+            color_toggle_icon.setBackgroundResource(R.drawable.ic_keyboard_arrow_down)
+            startActivityForResult(addGroupIntent, MainActivity.ADD_GROUP_REQUEST)
+        }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intentData)
+
+        // 새로 만들기 인텐트로 부터
+        if (requestCode == GroupConfigActivity.ADD_GROUP_REQUEST && resultCode == Activity.RESULT_OK) {
+            intentData?.let { data ->
+                val group = Group(
+                    0,
+                    data.getStringExtra(GroupAddEditActivity.EXTRA_GROUP_NAME)!!,
+                    data.getStringExtra(GroupAddEditActivity.EXTRA_GROUP_DESC)!!,
+                    data.getStringExtra(GroupAddEditActivity.EXTRA_GROUP_COLOR)!!
+                )
+                viewModel.groupInsert(group)
+                adapter.notifyDataSetChanged()
+                Unit
+            }
+            Snackbar.make(add_layout, "그룹이 추가되었습니다.", Snackbar.LENGTH_SHORT).show()
+        }
+    }
 
     // 메뉴 설정
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

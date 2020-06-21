@@ -86,14 +86,28 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/group_list_recyclerView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="40dp"
+        android:background="@null"
         android:elevation="10dp"
         android:orientation="vertical"
-        android:background="@null"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toTopOf="@id/currentColor_textView"
-        tools:listitem="@layout/group_select_list_item" >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/add_group_image"
+        tools:listitem="@layout/group_select_list_item">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/add_group_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/group_list_recyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/group_list_recyclerView"
+        app:srcCompat="@drawable/ic_add_circle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
