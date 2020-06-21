@@ -30,7 +30,7 @@ class GroupAddEditActivity : AppCompatActivity() {
         const val EXTRA_GROUP_COLOR = "com.vlaksuga.mymo.GROUP_COLOR"
     }
 
-    lateinit var groupAdapter: GroupAdapter
+    private lateinit var groupAdapter: GroupAdapter
     private lateinit var viewModel: ViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,16 +39,18 @@ class GroupAddEditActivity : AppCompatActivity() {
 
         // 시작화면 설정
         supportActionBar!!.title = "그룹 추가"
-        if(intent.hasExtra(EXTRA_GROUP_ID)) {
+        if (intent.hasExtra(EXTRA_GROUP_ID)) {
             supportActionBar!!.title = "그룹 편집"
-            current_group_color_textView.apply{
-                this.text =  intent.getStringExtra(EXTRA_GROUP_COLOR)
-                this.backgroundTintList = ColorStateList.valueOf(Color.parseColor(intent.getStringExtra(EXTRA_GROUP_COLOR)))
+            current_group_color_textView.apply {
+                this.text = intent.getStringExtra(EXTRA_GROUP_COLOR)
+                this.backgroundTintList =
+                    ColorStateList.valueOf(Color.parseColor(intent.getStringExtra(EXTRA_GROUP_COLOR)))
             }
             group_name_editText.setText(intent.getStringExtra(EXTRA_GROUP_NAME))
             group_desc_editText.setText(intent.getStringExtra(EXTRA_GROUP_DESC))
         }
 
+        groupAdapter = GroupAdapter(this)
 
         // 컬러 선택
         current_group_color_textView.setOnClickListener {
@@ -59,65 +61,66 @@ class GroupAddEditActivity : AppCompatActivity() {
     }
 
     private fun openColorPicker() {
-        val colorPicker = ColorPicker(this)
-
-        val colors : ArrayList<String> = ArrayList()
-
-        // init Color for start
-        val initColors = arrayListOf("#FA4659", "#364F6B", "#364F6B", "#3FC1C9", "#FA4659")
-
-        // 이미 사용중인 컬러
-        val currentUsingColorList: ArrayList<String>
-
-
-        // TODO : 사용할 수 없는 컬러 제외하기
-        colors.add("#0A7533")
-        colors.add("#FF3A2F")
-        colors.add("#FA4659")
-        colors.add("#59A6E9")
-        colors.add("#F0CCBD")
-
-        colors.add("#326AB4")
-        colors.add("#798517")
-        colors.add("#D5D68A")
-        colors.add("#F23AC6")
-        colors.add("#FFCB17")
-
-        colors.add("#FE6D71")
-        colors.add("#0A53DE")
-        colors.add("#FB6F24")
-        colors.add("#454545")
-        colors.add("#24D024")
-
-        // TODO : 그룹에서 사용된 컬러 제외하기
         viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        viewModel.allGroups.observe(this, Observer { groups ->
+            groups?.let {
+                val colorPicker = ColorPicker(this)
+                val colors = arrayListOf(
+                    "#292B2C",
+                    "#000000",
+                    "#0A7533",
+                    "#FF3A2F",
+                    "#FA4659",
+                    "#59A6E9",
 
+                    "#326AB4",
+                    "#798517",
+                    "#D5D68A",
+                    "#F23AC6",
+                    "#FFCB17",
 
-        val usingColors = arrayListOf<String>()
+                    "#0A53DE",
+                    "#FB6F24",
+                    "#454545",
+                    "#24D024",
+                    "#4546FF"
+                )
 
-        // 제외 컬러
-        for(color in usingColors) {
-            colors.remove(color)
-        }
-
-
-
-        colorPicker.setColors(colors)
-            .setTitle(getString(R.string.choose_color))
-            .setColumns(5)
-            .setRoundColorButton(true)
-            .setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
-                override fun onChooseColor(position: Int, color: Int) {
-                    val resultColor = String.format("#%06X", 0xFFFFFF and color)
-                    // TODO : 컬러선택 안하고 확인시 #000000 오류
-                    current_group_color_textView.text = resultColor
-                    current_group_color_textView.backgroundTintList = ColorStateList.valueOf(Color.parseColor(resultColor))
+                // 이미 지정된 색 빼기
+                groupAdapter.setGroups(it)
+                for(row in groups) {
+                    colors.remove(row.groupColor)
+                    Log.d("UsingGroupColors.for.viewModel.allGroups.observe.rockteki", row.groupColor)
                 }
 
-                override fun onCancel() {
-
+                // 추가할 색깔이 없을때 막기
+                if(colors.size == 0) {
+                    Toast.makeText(this, "그룹 색을 모두 사용하였습니다.", Toast.LENGTH_SHORT).show()
+                    return@Observer
                 }
-            }).show()
+
+                colorPicker.setColors(colors)
+                    .setTitle(getString(R.string.choose_color))
+                    .setColumns(5)
+                    .setRoundColorButton(true)
+                    .setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
+                        override fun onChooseColor(position: Int, color: Int) {
+                            val resultColor = String.format("#%06X", 0xFFFFFF and color)
+                            current_group_color_textView.text = resultColor
+                            current_group_color_textView.backgroundTintList =
+                                ColorStateList.valueOf(Color.parseColor(resultColor))
+                        }
+
+                        override fun onCancel() {
+                            // TODO : 컬러선택 안하고 확인시 #000000 오류
+                        }
+                    })
+                    .show()
+            }
+
+        })
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -126,7 +129,7 @@ class GroupAddEditActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.save_group -> saveGroup()
         }
         return super.onOptionsItemSelected(item)
@@ -146,15 +149,16 @@ class GroupAddEditActivity : AppCompatActivity() {
         val groupDesc = resultContent.toString().trim()
         val groupColor = resultColor.toString().trim()
 
-// TODO : 여기에 그룹 컬러비교해서 거르기
 
 
         if (TextUtils.isEmpty(resultTitle)) {
-            Snackbar.make(add_group_layout, getString(R.string.insert_title), Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(add_group_layout, getString(R.string.insert_title), Snackbar.LENGTH_SHORT)
+                .show()
             return
         }
         if (TextUtils.isEmpty(resultContent)) {
-            Snackbar.make(add_group_layout, getString(R.string.insert_memo), Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(add_group_layout, getString(R.string.insert_memo), Snackbar.LENGTH_SHORT)
+                .show()
             return
         }
         if (!groupColor.contains('#')) {

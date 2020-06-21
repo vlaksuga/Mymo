@@ -33,4 +33,8 @@ class Repository(private val dao: Dao) {
     suspend fun groupUpdate(group: Group) {
         dao.groupUpdate(group)
     }
+
+    suspend fun groupDelete(group: Group) {
+        dao.groupDelete(group)
+    }
 }

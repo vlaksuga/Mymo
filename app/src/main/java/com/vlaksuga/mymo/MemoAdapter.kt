@@ -79,7 +79,7 @@ class MemoAdapter internal constructor(context: Context) :
     }
 
     fun getMemoAt(position: Int): Memo {
-        return memos[position]
+        return filterMemoListResult[position]
     }
 
     public interface OnItemClickListener {

@@ -40,8 +40,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     lateinit var memoAdapter: MemoAdapter
-    lateinit var groupAdapter: GroupAdapter
-    lateinit var groupFilterAdapter: GroupFilterAdapter
+    private lateinit var groupAdapter: GroupAdapter
+    private lateinit var groupFilterAdapter: GroupFilterAdapter
     private lateinit var viewModel: ViewModel
     private lateinit var searchView: SearchView
     private lateinit var fab: FloatingActionButton
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
 
         // 인트로 패스 체크
-        var prefsState : Boolean = App.prefs.introPassed
+        val prefsState : Boolean = App.prefs.introPassed
 
         Log.d("prefsState.main.rockteki", prefsState.toString())
 
@@ -149,6 +149,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // 선택된 메모의 포지션과 다른 것이 삭제됨
                 val selectedMemo = memoAdapter.getMemoAt(viewHolder.adapterPosition)
                 val swipeDeleteBuilder = AlertDialog.Builder(this@MainActivity)
 
@@ -267,6 +268,18 @@ class MainActivity : AppCompatActivity() {
                     currentFilterState =
                         intent.getIntExtra(AddEditActivity.EXTRA_REPLY_FILTER_STATE, 0)
                 }
+
+                App.prefs.instantMemoTitle = memo.memoTitle
+                App.prefs.instantMemoContent = memo.memoContent
+                App.prefs.instantMemoGroupId = memo.groupId
+                App.prefs.instantMemoImportance = memo.isImportant
+
+                Log.d("onItemClick.main.App.prefs.instantMemoTitle.rockteki", App.prefs.instantMemoTitle!!)
+                Log.d("onItemClick.main.App.prefs.instantMemoContent.rockteki", App.prefs.instantMemoContent!!)
+                Log.d("onItemClick.main.App.prefs.instantMemoImportance.rockteki", App.prefs.instantMemoImportance.toString())
+                Log.d("onItemClick.main.App.prefs.instantMemoGroupId.rockteki", App.prefs.instantMemoGroupId.toString())
+
+
                 val editIntent = Intent(this@MainActivity, AddEditActivity::class.java)
                 editIntent.putExtra(AddEditActivity.EXTRA_REPLY_ID, memo._id)
                 editIntent.putExtra(AddEditActivity.EXTRA_REPLY_TITLE, memo.memoTitle)
@@ -278,6 +291,7 @@ class MainActivity : AppCompatActivity() {
                 editIntent.putExtra(AddEditActivity.EXTRA_REPLY_GROUP_NAME, memo.groupName)
                 editIntent.putExtra(AddEditActivity.EXTRA_REPLY_FILTER_STATE, currentFilterState)
                 startActivityForResult(editIntent, EDIT_MEMO_REQUEST)
+
                 Log.d("onItemClick.main.currentFilterState.rockteki", currentFilterState.toString())
                 Log.d("onItemClick.main.currentGroupId.rockteki", currentGroupId.toString())
 
@@ -373,10 +387,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 모두 아닌 경우
-        else {
-
-        }
     }
 
     // 메뉴 설정
@@ -523,7 +533,12 @@ class MainActivity : AppCompatActivity() {
         currentGroupColor = group.groupColor
         currentGroupName = group.groupName
         currentGroupId = group.groupId
+
+        App.prefs.instantMemoGroupId = currentGroupId
+
         fab.backgroundTintList = ColorStateList.valueOf(Color.parseColor(group.groupColor))
+
+
 
         title_color_view.setBackgroundColor(Color.parseColor(group.groupColor))
         val memoCounter = memoAdapter.itemCount.toString() + " NOTES"
@@ -539,8 +554,13 @@ class MainActivity : AppCompatActivity() {
         newIntent.putExtra(AddEditActivity.EXTRA_REPLY_GROUP_NAME, currentGroupName)
         newIntent.putExtra(AddEditActivity.EXTRA_REPLY_GROUP_COLOR, currentGroupColor)
         startActivityForResult(newIntent, ADD_MEMO_REQUEST)
+
         Log.d("addNewMemo.main.currentFilterState.rockteki", currentFilterState.toString())
         Log.d("addNewMemo.allMemos.main.currentGroupId.rockteki", currentGroupId.toString())
+        Log.d("addNewMemo.main.App.prefs.instantMemoTitle.rockteki", App.prefs.instantMemoTitle!!)
+        Log.d("addNewMemo.main.App.prefs.instantMemoContent.rockteki", App.prefs.instantMemoContent!!)
+        Log.d("addNewMemo.main.App.prefs.instantMemoImportance.rockteki", App.prefs.instantMemoImportance.toString())
+        Log.d("addNewMemo.main.App.prefs.instantMemoGroupId.rockteki", App.prefs.instantMemoGroupId.toString())
 
 
     }
@@ -557,6 +577,7 @@ class MainActivity : AppCompatActivity() {
         currentGroupId = 1
         fab.backgroundTintList =
             ColorStateList.valueOf(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
+        App.prefs.instantMemoGroupId = currentGroupId
         title_color_view.setBackgroundColor(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
         val memoCounter = memoAdapter.itemCount.toString() + " NOTES"
         count_textView.text = memoCounter

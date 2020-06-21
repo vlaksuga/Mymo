@@ -49,4 +49,8 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     fun groupUpdate(group: Group) = viewModelScope.launch(Dispatchers.IO) {
         repository.groupUpdate(group)
     }
+
+    fun groupDelete(group: Group) = viewModelScope.launch(Dispatchers.IO) {
+        repository.groupDelete(group)
+    }
 }

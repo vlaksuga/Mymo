@@ -18,7 +18,7 @@ class GroupAdapter internal constructor(context: Context) :
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     var groups = emptyList<Group>()
-    var groupColors = emptyList<String>()
+    private var groupColors = emptyList<String>()
 
     private lateinit var listener: OnItemClickListener
     internal var filterListResult: List<Group> = groups
@@ -64,8 +64,10 @@ class GroupAdapter internal constructor(context: Context) :
         notifyDataSetChanged()
     }
 
-    internal fun setGroupColors(colors : List<String>) {
-        this.groupColors = colors
+    internal fun setGroupColors(colors : List<String>)  {
+
+
+
         currentGroupColors = colors
         notifyDataSetChanged()
     }
@@ -85,27 +87,7 @@ class GroupAdapter internal constructor(context: Context) :
         return resultList[0]
     }
 
-    fun getColorAtId(id: Int): String {
-        val resultList = ArrayList<Group>()
-        for (row in groups) {
-            if (row.groupId == id) {
-                resultList.add(row)
-            }
-        }
-        return resultList[0].groupColor
-    }
-
-    fun getColorNameAtId(id: Int): String {
-        val resultList = ArrayList<Group>()
-        for (row in groups) {
-            if (row.groupId == id) {
-                resultList.add(row)
-            }
-        }
-        return resultList[0].groupName
-    }
-
-    public interface OnItemClickListener {
+    interface OnItemClickListener {
         fun onItemClick(group: Group) {}
     }
 
@@ -147,19 +129,6 @@ class GroupAdapter internal constructor(context: Context) :
             }
 
         }
-    }
-
-
-    // 컬러로 필터링
-    fun getColor(color: String) {
-        val resultList = ArrayList<Group>()
-        for (row in groups) {
-            if (row.groupColor.contains(color)) {
-                resultList.add(row)
-            }
-        }
-        filterListResult = resultList
-        notifyDataSetChanged()
     }
 
 

@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
+import android.widget.EditText
 import androidx.lifecycle.Observer
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -76,7 +77,9 @@ class AddEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_edit)
-
+        Log.d("onCreate.add.App.prefs.instantMemoTitle.rockteki", App.prefs.instantMemoTitle!!)
+        Log.d("onCreate.add.App.prefs.instantMemoContent.rockteki", App.prefs.instantMemoContent!!)
+        Log.d("onCreate.add.App.prefs.instantMemoGroupId.rockteki", App.prefs.instantMemoGroupId.toString())
         Log.d("onCreate.add.currentFilterState.rockteki", currentFilterState.toString())
         Log.d("onCreate.add.currentGroupId.rockteki", currentGroupId.toString())
         // 타이틀
@@ -231,6 +234,10 @@ class AddEditActivity : AppCompatActivity() {
     // 메뉴 아이템 선택시
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            android.R.id.home -> apply {
+                onBackPressed()
+                return true
+            }
             R.id.save_memo -> saveMemo()
             R.id.important_memu -> apply {
                 if (!currentImportance) {
@@ -351,5 +358,47 @@ class AddEditActivity : AppCompatActivity() {
         finish()
 
 
+    }
+
+    private fun askModifiedWhenLeave() {
+
+        val askDialog = AlertDialog.Builder(this)
+        askDialog.setMessage("변경사항을 저장할까요?")
+            .setPositiveButton("저장"
+            ) { _, _ -> saveMemo() }
+
+            .setNeutralButton("저장 안 함"
+            ) { _, _ -> finish() }
+            .setNegativeButton("취소") { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
+    override fun onBackPressed() {
+        // 쉐어드 프리퍼런스에 동일
+        if(App.prefs.instantMemoTitle != title_editText.text.toString() || App.prefs.instantMemoImportance != currentImportance || App.prefs.instantMemoContent != content_editText.text.toString()) {
+            askModifiedWhenLeave()
+            if(App.prefs.instantMemoGroupId != currentGroupId) {
+                askModifiedWhenLeave()
+            }
+
+            Log.d("onBackPressed.main.App.prefs.instantMemoTitle.rockteki", App.prefs.instantMemoTitle!!)
+            Log.d("onBackPressed.main.App.prefs.instantMemoContent.rockteki", App.prefs.instantMemoContent!!)
+            Log.d("onBackPressed.main.App.prefs.instantMemoImportance.rockteki", App.prefs.instantMemoImportance.toString())
+            Log.d("onBackPressed.main.App.prefs.instantMemoGroupId.rockteki", App.prefs.instantMemoGroupId.toString())
+            return
+        }
+        super.onBackPressed()
+    }
+
+    override fun onStop() {
+        App.prefs.instantMemoTitle = ""
+        App.prefs.instantMemoContent = ""
+        App.prefs.instantMemoImportance = false
+
+        Log.d("onStop.main.App.prefs.instantMemoTitle.rockteki", App.prefs.instantMemoTitle!!)
+        Log.d("onStop.main.App.prefs.instantMemoContent.rockteki", App.prefs.instantMemoContent!!)
+        Log.d("onStop.main.App.prefs.instantMemoImportance.rockteki", App.prefs.instantMemoImportance.toString())
+        Log.d("onStop.main.App.prefs.instantMemoGroupId.rockteki", App.prefs.instantMemoGroupId.toString())
+        super.onStop()
     }
 }
