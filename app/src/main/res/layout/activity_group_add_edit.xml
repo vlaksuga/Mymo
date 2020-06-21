@@ -54,4 +54,11 @@
         android:padding="16dp"
         android:textSize="16sp"/>
 
+    <Button
+        android:id="@+id/delete_this_group_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="그룹 삭제" />
+
 </LinearLayout>

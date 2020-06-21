@@ -14,11 +14,24 @@
 
         <TextView
             android:id="@+id/alert_dialog_title_textView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:padding="20dp"
             android:text="그룹 선택"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/ad_new_group_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:padding="20dp"
+            android:background="@android:color/transparent"
+            android:elevation="0dp"
+            android:text="새 그룹"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -39,7 +52,7 @@
             android:layout_margin="16dp"
             android:background="@color/colorPrimary"
             android:layout_below="@id/alert_dialog_recyclerView"
-            android:text="전체 노트"
+            android:text="모든 노트"
             android:textColor="#FFFFFF"
             app:layout_constrainedHeight="true" />
     </RelativeLayout>

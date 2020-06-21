@@ -19,6 +19,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val ADD_MEMO_REQUEST: Int = 1
         const val EDIT_MEMO_REQUEST: Int = 2
+        const val ADD_GROUP_REQUEST : Int = 3
     }
 
     lateinit var memoAdapter: MemoAdapter
@@ -304,7 +306,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
         super.onActivityResult(requestCode, resultCode, intentData)
 
-        // 새로 만들기 인텐트로 부터
+        // 메모추가 인텐트로 부터
         if (requestCode == ADD_MEMO_REQUEST && resultCode == Activity.RESULT_OK) {
             intentData?.let { data ->
                 // 메모 인서트 처리
@@ -343,7 +345,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 편집하기 인텐트로 부터
+        // 메모편집 인텐트로 부터
         else if (requestCode == EDIT_MEMO_REQUEST && resultCode == Activity.RESULT_OK) {
             val id: Int = intentData!!.getIntExtra(AddEditActivity.EXTRA_REPLY_ID, -1)
             if (id == -1) {
@@ -388,6 +390,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        else if (requestCode == ADD_GROUP_REQUEST && resultCode == Activity.RESULT_OK) {
+            intentData?.let {data ->
+                val group = Group(
+                    0,
+                    data.getStringExtra(GroupAddEditActivity.EXTRA_GROUP_NAME)!!,
+                    data.getStringExtra(GroupAddEditActivity.EXTRA_GROUP_DESC)!!,
+                    data.getStringExtra(GroupAddEditActivity.EXTRA_GROUP_COLOR)!!
+                )
+                viewModel.groupInsert(group)
+                Snackbar.make(recyclerView, "그룹이 추가되었습니다.", Snackbar.LENGTH_SHORT).show()
+                Unit
+            }
+        }
     }
 
     // 메뉴 설정
@@ -467,6 +482,8 @@ class MainActivity : AppCompatActivity() {
         alertDialogRecyclerView.layoutManager = LinearLayoutManager(this)
         alertDialogRecyclerView.adapter = groupFilterAdapter
         val allButton: Button = view.findViewById(R.id.ad_button_all)
+        val newButton : Button = view.findViewById(R.id.ad_new_group_button)
+
         val dialog = builder.create()
         groupFilterAdapter.setOnItemClickListener(object :
             GroupFilterAdapter.OnItemClickListener {
@@ -492,6 +509,13 @@ class MainActivity : AppCompatActivity() {
                 .setBackgroundTint(Color.parseColor(AddEditActivity.COLOR_DEFAULT)).show()
             dialog.dismiss()
         }
+
+        newButton.setOnClickListener {
+            val addGroupIntent = Intent(this, GroupAddEditActivity::class.java)
+            startActivityForResult(addGroupIntent, ADD_GROUP_REQUEST)
+            dialog.dismiss()
+        }
+
         dialog.setCancelable(true)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()

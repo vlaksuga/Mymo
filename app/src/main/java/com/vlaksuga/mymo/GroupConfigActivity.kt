@@ -17,8 +17,8 @@ import kotlinx.android.synthetic.main.activity_group_list.*
 
 class GroupConfigActivity : AppCompatActivity() {
     companion object {
-        const val ADD_GROUP_REQUEST: Int = 1
-        const val EDIT_GROUP_REQUEST: Int = 2
+        const val ADD_GROUP_REQUEST: Int = 3
+        const val EDIT_GROUP_REQUEST: Int = 4
     }
 
     private lateinit var viewModel: ViewModel
@@ -29,7 +29,7 @@ class GroupConfigActivity : AppCompatActivity() {
         setContentView(R.layout.activity_group_list)
 
         // 액션 바
-        supportActionBar!!.title = "그룹"
+        supportActionBar!!.title = "그룹 관리"
 
         // 어뎁터
         adapter = GroupAdapter(this)
@@ -47,6 +47,11 @@ class GroupConfigActivity : AppCompatActivity() {
                 adapter.setGroups(it)
             }
         })
+        viewModel.allMemos.observe(this, Observer { memos ->
+            memos?.let {
+                adapter.setMemos(it)
+            }
+        })
 
         // 아이템 클릭 -> 그룹 편집
         adapter.setOnItemClickListener(object : GroupAdapter.OnItemClickListener {
@@ -59,8 +64,6 @@ class GroupConfigActivity : AppCompatActivity() {
                 startActivityForResult(intent, EDIT_GROUP_REQUEST)
             }
         })
-
-        // 아이템 롤클릭 -> 삭제 다이얼로그
 
     }
 
@@ -107,11 +110,6 @@ class GroupConfigActivity : AppCompatActivity() {
                 viewModel.groupUpdate(group)
                 Unit
             }
-        }
-
-        // 모두 아닌 경우
-        else {
-
         }
     }
 

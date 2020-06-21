@@ -1,6 +1,8 @@
 package com.vlaksuga.mymo
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.database.Cursor
@@ -10,6 +12,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
@@ -48,6 +51,7 @@ class GroupAddEditActivity : AppCompatActivity() {
             }
             group_name_editText.setText(intent.getStringExtra(EXTRA_GROUP_NAME))
             group_desc_editText.setText(intent.getStringExtra(EXTRA_GROUP_DESC))
+            delete_this_group_button.visibility = View.VISIBLE
         }
 
         groupAdapter = GroupAdapter(this)
@@ -57,7 +61,49 @@ class GroupAddEditActivity : AppCompatActivity() {
             openColorPicker()
         }
 
+        delete_this_group_button.setOnClickListener {
+            deleteThisGroup()
+        }
 
+
+    }
+
+    private fun deleteThisGroup() {
+        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        viewModel.allMemos.observe(this, Observer { memos ->
+            memos?.let{
+                groupAdapter.setMemos(it)
+                val targetId = intent.getIntExtra(EXTRA_GROUP_ID, -1)
+                val targetName = intent.getStringExtra(EXTRA_GROUP_NAME)!!
+                val targetDesc = intent.getStringExtra(EXTRA_GROUP_DESC)!!
+                val targetColor = intent.getStringExtra(EXTRA_GROUP_COLOR)!!
+
+                if(groupAdapter.getMemoCountByGroupId(targetId) == 0) {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setMessage("그룹을 삭제할까요?")
+                        .setPositiveButton("확인") { dialog, _ ->
+                            if(targetId != -1) {
+                                viewModel.groupDelete(group = Group(targetId, targetName, targetDesc, targetColor))
+                                Toast.makeText(this, "그룹이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                                finish()
+                            }
+                        }
+                        .setNegativeButton("취소"
+                        ) { dialog, _ ->
+                            Snackbar.make(add_group_layout, "취소했습니다.", Snackbar.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        }
+                        .show()
+                } else {
+                    Snackbar.make(add_group_layout, "메모를 먼저 삭제해야 합니다.", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        })
+
+
+
+
+        /*viewModel.groupDelete(group = Group(targetId, targetName, targetDesc, targetColor))*/
     }
 
     private fun openColorPicker() {

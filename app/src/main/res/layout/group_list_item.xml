@@ -38,11 +38,22 @@
                 android:background="@android:color/transparent"
                 android:maxLines="1"
                 android:text="그룹이름"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 app:fontFamily="@font/roboto_bold"
                 app:layout_constraintBottom_toBottomOf="@+id/group_colorBar_textView"
                 app:layout_constraintStart_toEndOf="@+id/group_colorBar_textView"
                 app:layout_constraintTop_toTopOf="@+id/group_colorBar_textView" />
+
+            <TextView
+                android:id="@+id/group_count_memo_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:text="0"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/group_title_textView"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

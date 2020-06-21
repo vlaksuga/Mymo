@@ -19,17 +19,19 @@ class GroupAdapter internal constructor(context: Context) :
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     var groups = emptyList<Group>()
+    var memos = emptyList<Memo>()
 
 
     private lateinit var listener: OnItemClickListener
     internal var filterListResult: List<Group> = groups
-
+    private var memoListResult: List<Memo> = memos
 
 
     inner class GroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardItemView: CardView = itemView.findViewById(R.id.holder_group_cardView)
         val titleItemView: TextView = itemView.findViewById(R.id.group_title_textView)
         val barColorItemView: ImageView = itemView.findViewById(R.id.group_colorBar_textView)
+        val countItemView: TextView = itemView.findViewById(R.id.group_count_memo_textView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
@@ -38,7 +40,7 @@ class GroupAdapter internal constructor(context: Context) :
     }
 
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
-        if(position == 0) {
+        if (position == 0) {
             holder.cardItemView.visibility = View.GONE
             holder.titleItemView.visibility = View.GONE
             holder.barColorItemView.visibility = View.GONE
@@ -47,15 +49,15 @@ class GroupAdapter internal constructor(context: Context) :
         }
 
         val current = filterListResult[position]
-            holder.cardItemView.setOnClickListener {
-                if (position != RecyclerView.NO_POSITION) {
-                    listener.onItemClick(filterListResult[position])
-                }
+        holder.cardItemView.setOnClickListener {
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(filterListResult[position])
             }
-            holder.titleItemView.text = current.groupName
-            holder.barColorItemView.backgroundTintList =
-                ColorStateList.valueOf(Color.parseColor(current.groupColor))
-
+        }
+        holder.titleItemView.text = current.groupName
+        holder.barColorItemView.backgroundTintList =
+            ColorStateList.valueOf(Color.parseColor(current.groupColor))
+        holder.countItemView.text = getMemoCountByGroupId(current.groupId).toString()
     }
 
     override fun getItemCount() = filterListResult.size
@@ -66,6 +68,11 @@ class GroupAdapter internal constructor(context: Context) :
         notifyDataSetChanged()
     }
 
+    internal fun setMemos(memos: List<Memo>) {
+        this.memos = memos
+        memoListResult = memos
+        notifyDataSetChanged()
+    }
 
 
     interface OnItemClickListener {
@@ -74,6 +81,16 @@ class GroupAdapter internal constructor(context: Context) :
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
+    }
+
+    fun getMemoCountByGroupId(id: Int): Int {
+        val memoListByGroupId = ArrayList<Memo>()
+        for (row in memoListResult) {
+            if (row.groupId == id) {
+                memoListByGroupId.add(row)
+            }
+        }
+        return memoListByGroupId.size
     }
 
 
