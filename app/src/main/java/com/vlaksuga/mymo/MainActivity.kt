@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Process.myPid
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -454,14 +455,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun selectGroupDialog() {
         val builder = AlertDialog.Builder(this)
-        val view = layoutInflater.inflate(R.layout.alert_dialog_filter_group, null)
+        val view = layoutInflater.inflate(R.layout.alert_dialog_filter_group,null, false)
 
         builder.setView(view)
         val alertDialogRecyclerView: RecyclerView =
             view.findViewById(R.id.alert_dialog_recyclerView)
-        val groupFilterAdapter: GroupFilterAdapter = GroupFilterAdapter(this)
+        val groupFilterAdapter = GroupFilterAdapter(this)
         viewModel.allGroups.value?.let { itGroup -> groupFilterAdapter.setGroups(itGroup) }
-        alertDialogRecyclerView.setHasFixedSize(false)
+        viewModel.allMemos.value?.let {memos -> groupFilterAdapter.setMemos(memos)}
+        alertDialogRecyclerView.setHasFixedSize(true)
         alertDialogRecyclerView.layoutManager = LinearLayoutManager(this)
         alertDialogRecyclerView.adapter = groupFilterAdapter
         val allButton: Button = view.findViewById(R.id.ad_button_all)

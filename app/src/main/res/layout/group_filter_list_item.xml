@@ -45,6 +45,17 @@
                 app:layout_constraintStart_toEndOf="@+id/group_filter_colorBar_textView"
                 app:layout_constraintTop_toTopOf="@+id/group_filter_colorBar_textView" />
 
+            <TextView
+                android:id="@+id/count_memos_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:text="0"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 

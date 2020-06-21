@@ -18,14 +18,18 @@ class GroupFilterAdapter internal constructor(context: Context) :
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     var groups = emptyList<Group>()
+    var memos = emptyList<Memo>()
+
 
     private lateinit var listener: OnItemClickListener
     internal var filterListResult: List<Group> = groups
+    internal var memoListResult: List<Memo> = memos
 
     inner class GroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardItemView: CardView = itemView.findViewById(R.id.holder_group_filter_cardView)
         val titleItemView: TextView = itemView.findViewById(R.id.group_filter_title_textView)
         val barColorItemView: ImageView = itemView.findViewById(R.id.group_filter_colorBar_textView)
+        val countView : TextView = itemView.findViewById(R.id.count_memos_textview)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
@@ -42,6 +46,8 @@ class GroupFilterAdapter internal constructor(context: Context) :
         }
         holder.titleItemView.text = current.groupName
         holder.barColorItemView.backgroundTintList = ColorStateList.valueOf(Color.parseColor(current.groupColor))
+        holder.countView.text = getMemoCountByGroupId(current.groupId).toString()
+
         if(position == 0) {
             holder.titleItemView.setTextColor(ColorStateList.valueOf(Color.parseColor("#DDDDDD")))
             holder.barColorItemView.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#DDDDDD"))
@@ -62,6 +68,22 @@ class GroupFilterAdapter internal constructor(context: Context) :
 
     public fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
+    }
+
+    internal fun setMemos(memos: List<Memo>) {
+        this.memos = memos
+        memoListResult = memos
+        notifyDataSetChanged()
+    }
+
+    private fun getMemoCountByGroupId(id : Int) : Int {
+        val memoListByGroupId = ArrayList<Memo>()
+        for(row in memoListResult) {
+            if(row.groupId == id) {
+                memoListByGroupId.add(row)
+            }
+        }
+        return memoListByGroupId.size
     }
 
 

@@ -48,7 +48,7 @@ class GroupConfigActivity : AppCompatActivity() {
             }
         })
 
-        // 아이템 클릭 -> 편집 인텐트
+        // 아이템 클릭 -> 그룹 편집
         adapter.setOnItemClickListener(object : GroupAdapter.OnItemClickListener {
             override fun onItemClick(group: Group) {
                 val intent: Intent = Intent(this@GroupConfigActivity, GroupAddEditActivity::class.java)
@@ -59,6 +59,9 @@ class GroupConfigActivity : AppCompatActivity() {
                 startActivityForResult(intent, EDIT_GROUP_REQUEST)
             }
         })
+
+        // 아이템 롤클릭 -> 삭제 다이얼로그
+
     }
 
 

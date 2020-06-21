@@ -306,7 +306,7 @@ class AddEditActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SEND)
         val titleText = title_editText?.text.toString()
         val contentText = content_editText?.text.toString()
-        val shareContent = titleText + contentText
+        val shareContent = "제목 : $titleText \n내용 : $contentText"
         intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_TEXT, shareContent)
         val shareMemoIntent = Intent.createChooser(intent, getString(R.string.share_title))

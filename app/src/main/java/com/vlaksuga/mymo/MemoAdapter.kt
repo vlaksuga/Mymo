@@ -27,7 +27,6 @@ class MemoAdapter internal constructor(context: Context) :
     private lateinit var listener: OnItemClickListener
 
     internal var filterMemoListResult: List<Memo> = memos
-    internal var filterGroupListResult: List<Group> = groups
 
     inner class MemoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardItemView: CardView = itemView.findViewById(R.id.holder_cardView)

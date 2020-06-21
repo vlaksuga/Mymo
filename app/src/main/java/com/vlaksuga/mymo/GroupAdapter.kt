@@ -13,16 +13,18 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 class GroupAdapter internal constructor(context: Context) :
     RecyclerView.Adapter<GroupAdapter.GroupViewHolder>(), Filterable {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     var groups = emptyList<Group>()
-    private var groupColors = emptyList<String>()
+
 
     private lateinit var listener: OnItemClickListener
     internal var filterListResult: List<Group> = groups
-    internal var currentGroupColors : List<String> = groupColors
+
+
 
     inner class GroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardItemView: CardView = itemView.findViewById(R.id.holder_group_cardView)
@@ -63,6 +65,8 @@ class GroupAdapter internal constructor(context: Context) :
         filterListResult = groups
         notifyDataSetChanged()
     }
+
+
 
     interface OnItemClickListener {
         fun onItemClick(group: Group) {}
