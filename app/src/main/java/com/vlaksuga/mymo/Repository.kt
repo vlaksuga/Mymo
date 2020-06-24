@@ -49,6 +49,10 @@ class Repository(private val dao: Dao) {
         dao.trashDelete(trash)
     }
 
+    suspend fun deleteAllTimeOverTrash(time : Long) {
+        dao.deleteAllTimeOverTrash(time)
+    }
+
     suspend fun deleteAllTrash() {
         dao.deleteAllTrash()
     }

@@ -81,7 +81,7 @@ class GroupAddEditActivity : AppCompatActivity() {
                 if(groupAdapter.getMemoCountByGroupId(targetId) == 0) {
                     val builder = AlertDialog.Builder(this)
                     builder.setMessage("그룹을 삭제할까요?")
-                        .setPositiveButton("확인") { dialog, _ ->
+                        .setPositiveButton("확인") { _, _ ->
                             if(targetId != -1) {
                                 viewModel.groupDelete(group = Group(targetId, targetName, targetDesc, targetColor))
                                 Toast.makeText(this, "그룹이 삭제되었습니다.", Toast.LENGTH_SHORT).show()

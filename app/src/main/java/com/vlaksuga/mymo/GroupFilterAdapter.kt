@@ -23,7 +23,7 @@ class GroupFilterAdapter internal constructor(context: Context) :
 
     private lateinit var listener: OnItemClickListener
     internal var filterListResult: List<Group> = groups
-    private var memoListResult: List<Memo> = memos
+    internal var memoListResult: List<Memo> = memos
 
     inner class GroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardItemView: CardView = itemView.findViewById(R.id.holder_group_filter_cardView)

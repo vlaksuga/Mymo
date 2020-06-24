@@ -22,13 +22,14 @@
                 android:id="@+id/trash_exDate_textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:gravity="center"
                 android:text="날짜"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="10sp"
                 app:fontFamily="@font/roboto_bold"
-                app:layout_constraintStart_toEndOf="@+id/guide_left_imageView"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -56,9 +57,9 @@
                 android:id="@+id/guide_expire_trash_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:tint="#aaaaaa"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_delete_forever" />
@@ -77,10 +78,9 @@
                 android:id="@+id/guide_recover_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:tint="#aaaaaa"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guide_left_imageView"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_assignment_return" />
 
@@ -88,9 +88,10 @@
                 android:id="@+id/guide_left_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:tint="#aaaaaa"
                 app:layout_constraintBottom_toBottomOf="@+id/guide_recover_imageView"
-                app:layout_constraintStart_toEndOf="@+id/guide_recover_imageView"
+                app:layout_constraintEnd_toStartOf="@+id/guide_right_imageView"
                 app:layout_constraintTop_toTopOf="@+id/guide_recover_imageView"
                 app:srcCompat="@drawable/ic_fast_rewind" />
 

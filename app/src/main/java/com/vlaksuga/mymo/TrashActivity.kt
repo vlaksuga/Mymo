@@ -1,11 +1,14 @@
 package com.vlaksuga.mymo
 
+import android.content.DialogInterface
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -15,7 +18,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_trash.*
+import java.util.*
 
 class TrashActivity : AppCompatActivity() {
 
@@ -46,6 +50,9 @@ class TrashActivity : AppCompatActivity() {
         viewModel.allTrash.observe(this, Observer { trash ->
             trash?.let {
                 trashAdapter.setTrash(it)
+                val currentTime = Date().time
+                viewModel.deleteAllTimeOverTrash(currentTime)
+                checkEmptyView()
             }
         })
 
@@ -243,5 +250,39 @@ class TrashActivity : AppCompatActivity() {
 
         val itemTouchHelperLeft = ItemTouchHelper(itemTouchHelperLeftCallback)
         itemTouchHelperLeft.attachToRecyclerView(trashRecyclerView)
+    }
+
+    // 리스트 없음
+    private fun checkEmptyView() {
+        if (trashAdapter.itemCount < 1) {
+            trash_is_empty_view.visibility = View.VISIBLE
+        } else {
+            trash_is_empty_view.visibility = View.GONE
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.trash_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.trash_delete_all -> apply{
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage("휴지통을 비울까요?")
+                    .setPositiveButton("확인"
+                    ) { _, _ ->
+                        viewModel.deleteAllTrash()
+                        Snackbar.make(trash_layout, "휴지통을 비웠습니다.", Snackbar.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton("취소") {dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -2,16 +2,30 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/trash_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TrashActivity">
 
+    <TextView
+        android:id="@+id/trash_desc_textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="15일이 지난 노트는 자동으로 휴지통에서 삭제됩니다."
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/trash_rv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/trash_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/trash_list_item"
-        />
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/trash_desc_textView"
+        tools:listitem="@layout/trash_list_item" />
 
     <TextView
         android:id="@+id/trash_is_empty_view"
@@ -19,10 +33,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="휴지통이 비었습니다."
-        android:visibility="gone"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

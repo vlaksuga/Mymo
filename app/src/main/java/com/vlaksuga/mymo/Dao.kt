@@ -51,6 +51,10 @@ interface Dao {
     @Delete
     suspend fun trashDelete(trash : Trash)
 
+
+    @Query("Delete from trash WHERE trashExpireTime < :time")
+    suspend fun deleteAllTimeOverTrash(time : Long)
+
     @Query("Delete from trash")
     suspend fun deleteAllTrash()
 }

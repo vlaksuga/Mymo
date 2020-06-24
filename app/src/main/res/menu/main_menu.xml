@@ -15,10 +15,6 @@
         android:title="@string/add_new"
         android:iconTint="#FFFFFF"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/memo_color_filter"
-        android:title="그룹 선택"
-        app:showAsAction="never"/>
 
     <item
         android:id="@+id/group_config"

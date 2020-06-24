@@ -31,6 +31,9 @@ import java.util.*
 class AddEditActivity : AppCompatActivity() {
 
     companion object {
+        // REQUEST CODE
+        const val ADD_GROUP_REQUEST = 3
+
         // EXTRA KEYS
         const val EXTRA_REPLY_THEME_COLOR = "com.vlaksuga.mymo.THEME_COLOR"
         const val EXTRA_REPLY_FILTER_STATE = "com.vlaksuga.mymo.FILTER_STATE"
@@ -205,7 +208,7 @@ class AddEditActivity : AppCompatActivity() {
             groupListRecyclerView.visibility = View.VISIBLE
             add_group_image.visibility = View.VISIBLE
             color_toggle_icon.setBackgroundResource(R.drawable.ic_keyboard_arrow_down)
-            startActivityForResult(addGroupIntent, MainActivity.ADD_GROUP_REQUEST)
+            startActivityForResult(addGroupIntent, ADD_GROUP_REQUEST)
         }
     }
 

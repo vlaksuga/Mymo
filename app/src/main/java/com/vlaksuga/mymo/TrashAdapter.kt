@@ -23,12 +23,9 @@ class TrashAdapter internal constructor(context: Context) :
 
     private var trash = emptyList<Trash>()
 
-    private lateinit var listener: OnItemClickListener
-
     internal var listResult: List<Trash> = trash
 
     inner class TrashViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val cardItemView: CardView = itemView.findViewById(R.id.trash_holder_cardView)
         val titleItemView: TextView = itemView.findViewById(R.id.trash_title_textView)
         val contentItemView: TextView = itemView.findViewById(R.id.trash_content_textView)
         val exDateItemView: TextView = itemView.findViewById(R.id.trash_exDate_textView)
@@ -41,11 +38,6 @@ class TrashAdapter internal constructor(context: Context) :
 
     override fun onBindViewHolder(holder: TrashViewHolder, position: Int) {
         val currentTrash = listResult[position]
-        holder.cardItemView.setOnClickListener {
-            if (position != RecyclerView.NO_POSITION) {
-                listener.onItemClick(listResult[position])
-            }
-        }
         val dateSimpleDateFormat = SimpleDateFormat("삭제 예정 : yyyy년 MM월 dd일 a hh:mm", Locale.ROOT)
 
         holder.titleItemView.text = currentTrash.trashTitle
@@ -67,11 +59,4 @@ class TrashAdapter internal constructor(context: Context) :
         return listResult[position]
     }
 
-    public interface OnItemClickListener {
-        fun onItemClick(trash: Trash) {}
-    }
-
-    public fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.listener = listener
-    }
 }

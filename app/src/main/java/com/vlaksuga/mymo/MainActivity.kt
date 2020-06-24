@@ -3,18 +3,13 @@ package com.vlaksuga.mymo
 import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Process.myPid
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +18,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -39,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val ADD_MEMO_REQUEST: Int = 1
         const val EDIT_MEMO_REQUEST: Int = 2
-        const val ADD_GROUP_REQUEST : Int = 3
     }
 
     lateinit var memoAdapter: MemoAdapter
@@ -355,20 +350,6 @@ class MainActivity : AppCompatActivity() {
                 searchView.isIconified = false
             }
         }
-
-        else if (requestCode == ADD_GROUP_REQUEST && resultCode == Activity.RESULT_OK) {
-            intentData?.let {data ->
-                val group = Group(
-                    0,
-                    data.getStringExtra(GroupAddEditActivity.EXTRA_GROUP_NAME)!!,
-                    data.getStringExtra(GroupAddEditActivity.EXTRA_GROUP_DESC)!!,
-                    data.getStringExtra(GroupAddEditActivity.EXTRA_GROUP_COLOR)!!
-                )
-                viewModel.groupInsert(group)
-                Snackbar.make(recyclerView, "그룹이 추가되었습니다.", Snackbar.LENGTH_SHORT).show()
-                Unit
-            }
-        }
     }
 
     // 메뉴 설정
@@ -425,8 +406,6 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, TrashActivity::class.java))
             }
 
-            // 그룹 선택
-            R.id.memo_color_filter -> selectGroupDialog()
 
             // 그룹 액티비티 추가 / 편집
             R.id.group_config -> goToGroupAddEditActivity()
@@ -447,12 +426,17 @@ class MainActivity : AppCompatActivity() {
             view.findViewById(R.id.alert_dialog_recyclerView)
         val groupFilterAdapter = GroupFilterAdapter(this)
         viewModel.allGroups.value?.let { itGroup -> groupFilterAdapter.setGroups(itGroup) }
-        viewModel.allMemos.value?.let {memos -> groupFilterAdapter.setMemos(memos)}
+        viewModel.allMemos.value?.let {memos ->
+            groupFilterAdapter.setMemos(memos)
+            val groupAllCount : TextView = view.findViewById(R.id.all_group_count_memos_textview)
+            groupAllCount.text = groupFilterAdapter.memoListResult.size.toString()
+        }
         alertDialogRecyclerView.setHasFixedSize(true)
         alertDialogRecyclerView.layoutManager = LinearLayoutManager(this)
         alertDialogRecyclerView.adapter = groupFilterAdapter
-        val allButton: Button = view.findViewById(R.id.ad_button_all)
-        val newButton : Button = view.findViewById(R.id.ad_new_group_button)
+        val newMemoButton: Button = view.findViewById(R.id.ad_new_memo)
+        val newButton : Button = view.findViewById(R.id.ad_edit_group_button)
+        val allGroupCardView : CardView = view.findViewById(R.id.all_group_cardView)
 
         val dialog = builder.create()
         groupFilterAdapter.setOnItemClickListener(object :
@@ -468,16 +452,19 @@ class MainActivity : AppCompatActivity() {
         })
 
         // 전체보기 선택시
-        allButton.setOnClickListener {
-            getAllMemo()
-            Snackbar.make(recyclerView, "전체보기", Snackbar.LENGTH_SHORT)
-                .setBackgroundTint(Color.parseColor(AddEditActivity.COLOR_DEFAULT)).show()
+        newMemoButton.setOnClickListener {
+            addNewMemo()
             dialog.dismiss()
         }
 
         newButton.setOnClickListener {
-            val addGroupIntent = Intent(this, GroupAddEditActivity::class.java)
-            startActivityForResult(addGroupIntent, ADD_GROUP_REQUEST)
+            val goGroupConfigIntent = Intent(this, GroupConfigActivity::class.java)
+            startActivity(goGroupConfigIntent)
+            dialog.dismiss()
+        }
+
+        allGroupCardView.setOnClickListener {
+            getAllMemo()
             dialog.dismiss()
         }
 
@@ -582,7 +569,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        if (App.prefs.instantMemoGroupId != 1){
+        if (currentFilterState != 0){
             getAllMemo()
             return
         }

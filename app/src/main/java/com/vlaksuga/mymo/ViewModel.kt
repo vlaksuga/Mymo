@@ -45,11 +45,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     fun delete(memo: Memo) = viewModelScope.launch(Dispatchers.IO) {
         repository.delete(memo)
         val expireDateAfter = 15
+        val oneDay = 86400000
         val trashId = memo._id
         val trashTitle = memo.memoTitle
         val trashContent = memo.memoContent
         val trashInitTime = Date().time
-        val trashExpireTime = trashInitTime + (86400000*expireDateAfter)
+        val trashExpireTime = trashInitTime + (oneDay*expireDateAfter)
         repository.trashInsert(trash = Trash(trashId, trashTitle, trashContent, trashInitTime, trashExpireTime))
     }
 
@@ -105,6 +106,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         val memoGroupColor = "#292B2C"
         val memoGroupName = "기타"
         repository.delete(memo = Memo(memoId, memoTitle, memoContent, initTime, isImportant, memoGroupId, memoGroupColor, memoGroupName))
+    }
+
+    fun deleteAllTimeOverTrash(time : Long) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteAllTimeOverTrash(time)
     }
 
     fun deleteAllTrash() = viewModelScope.launch(Dispatchers.IO) {
