@@ -38,12 +38,12 @@ class TrashAdapter internal constructor(context: Context) :
 
     override fun onBindViewHolder(holder: TrashViewHolder, position: Int) {
         val currentTrash = listResult[position]
-        val dateSimpleDateFormat = SimpleDateFormat("삭제 예정 : yyyy년 MM월 dd일 a hh:mm", Locale.ROOT)
+        val dateSimpleDateFormat = SimpleDateFormat("yyyy-MM-dd a hh:mm", Locale.ROOT)
 
         holder.titleItemView.text = currentTrash.trashTitle
         holder.contentItemView.text = currentTrash.trashContent
         holder.exDateItemView.text =
-            dateSimpleDateFormat.format(Timestamp(currentTrash.trashExpireTime)).toString()
+            "EXP : " + dateSimpleDateFormat.format(Timestamp(currentTrash.trashExpireTime)).toString()
     }
 
 

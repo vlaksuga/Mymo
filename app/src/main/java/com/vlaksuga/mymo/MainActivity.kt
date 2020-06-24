@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     private var currentThemeColor: String = AddEditActivity.COLOR_DEFAULT
     private var currentFilterState: Int = 0
     private var currentGroupId: Int = -1
-    private var currentGroupName: String = "기타"
+    private var currentGroupName: String = "ETC"
     private var currentGroupColor: String = "#000000"
 
     // 시작
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                     memoAdapter.getListByGroupId(currentGroupId)
                 }
                 checkEmptyView()
-                val memoCounter = memoAdapter.itemCount.toString() + " NOTES"
+                val memoCounter = memoAdapter.itemCount.toString() + getString(R.string.main_note_count)
                 count_textView.text = memoCounter
             }
         })
@@ -389,11 +389,10 @@ class MainActivity : AppCompatActivity() {
             // 새로 만들기
             R.id.add_memo_menu -> addNewMemo()
 
-            // 인트로 (테스트
-/*            R.id.go_intro -> apply {
+            R.id.intro_menu -> apply {
                 val introIntent = Intent(this, SwipeTutorial::class.java)
                 startActivity(introIntent)
-            }*/
+            }
 
             // 제목 검색
             R.id.action_search -> apply {
@@ -483,7 +482,7 @@ class MainActivity : AppCompatActivity() {
     private fun appReset() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage(getString(R.string.delete_All_message))
-        builder.setPositiveButton("확인") { _, _ ->
+        builder.setPositiveButton(getString(R.string.positive_button)) { _, _ ->
             viewModel.deleteAll()
             viewModel.deleteAllGroup(1)
             viewModel.deleteAllTrash()
@@ -493,7 +492,7 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.LENGTH_SHORT
             ).show()
         }
-        builder.setNegativeButton("취소") { dialogInterface, _ ->
+        builder.setNegativeButton(getString(R.string.negative_button)) { dialogInterface, _ ->
             dialogInterface.dismiss()
         }
         val dialog: AlertDialog = builder.create()
@@ -517,7 +516,7 @@ class MainActivity : AppCompatActivity() {
 
 
         title_color_view.setBackgroundColor(Color.parseColor(group.groupColor))
-        val memoCounter = memoAdapter.itemCount.toString() + " NOTES"
+        val memoCounter = memoAdapter.itemCount.toString() + getString(R.string.main_note_count)
         count_textView.text = memoCounter
     }
 
@@ -540,13 +539,13 @@ class MainActivity : AppCompatActivity() {
         currentFilterState = 0
         currentThemeColor = AddEditActivity.COLOR_DEFAULT
         currentGroupColor = AddEditActivity.COLOR_DEFAULT
-        currentGroupName = "기타"
+        currentGroupName = getString(R.string.default_currentGroupName)
         currentGroupId = 1
         fab.backgroundTintList =
             ColorStateList.valueOf(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
         App.prefs.instantMemoGroupId = currentGroupId
         title_color_view.setBackgroundColor(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
-        val memoCounter = memoAdapter.itemCount.toString() + " NOTES"
+        val memoCounter = memoAdapter.itemCount.toString() + getString(R.string.main_note_count)
         count_textView.text = memoCounter
         checkEmptyView()
 
@@ -576,12 +575,12 @@ class MainActivity : AppCompatActivity() {
 
         else {
             val closeBuilder = AlertDialog.Builder(this)
-            closeBuilder.setMessage("종료하시겠습니까?")
-                .setPositiveButton("확인"
+            closeBuilder.setMessage(getString(R.string.close_app_message))
+                .setPositiveButton(getString(R.string.positive_button)
                 ) { _, _ ->
                     finish()
                 }
-                .setNegativeButton("취소"
+                .setNegativeButton(getString(R.string.negative_button)
                 ) { dialog, _ -> dialog!!.dismiss() }
                 .show()
         }

@@ -40,7 +40,7 @@ class TrashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_trash)
 
         // 액션바 타이틀
-        supportActionBar!!.title = "휴지통"
+        supportActionBar!!.title = getString(R.string.trash_title)
 
         // 어댑터
         trashAdapter = TrashAdapter(this)
@@ -80,12 +80,12 @@ class TrashActivity : AppCompatActivity() {
                 val swipeDeleteBuilder = AlertDialog.Builder(this@TrashActivity)
 
                 swipeDeleteBuilder.apply {
-                    setMessage("완전히 삭제할까요?")
+                    setMessage(getString(R.string.empty_trash))
                     setPositiveButton(
                         getString(R.string.positive_button)
                     ) { _, _ ->
                         viewModel.trashDelete(selectedTrash)
-                        Snackbar.make(trashRecyclerView, "메모를 완전히 삭제하였습니다.", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(trashRecyclerView, getString(R.string.enempty_trash), Snackbar.LENGTH_SHORT).show()
                     }
                     setNegativeButton(
                         getString(R.string.negative_button)
@@ -173,12 +173,12 @@ class TrashActivity : AppCompatActivity() {
                 val swipeRecoverBuilder = AlertDialog.Builder(this@TrashActivity)
 
                 swipeRecoverBuilder.apply {
-                    setMessage("메모를 복원할까요?")
+                    setMessage(getString(R.string.ask_recover_trash))
                     setPositiveButton(
                         getString(R.string.positive_button)
                     ) { _, _ ->
                         viewModel.recoverTrash(selectedTrash)
-                        Snackbar.make(trashRecyclerView, "메모를 기타 그룹으로 복원하였습니다.", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(trashRecyclerView, getString(R.string.recover_trash_message), Snackbar.LENGTH_SHORT).show()
                     }
                     setNegativeButton(
                         getString(R.string.negative_button)
@@ -270,13 +270,13 @@ class TrashActivity : AppCompatActivity() {
         when(item.itemId) {
             R.id.trash_delete_all -> apply{
                 val builder = AlertDialog.Builder(this)
-                builder.setMessage("휴지통을 비울까요?")
-                    .setPositiveButton("확인"
+                builder.setMessage(getString(R.string.ask_trash_remove_forever))
+                    .setPositiveButton(getString(R.string.positive_button)
                     ) { _, _ ->
                         viewModel.deleteAllTrash()
-                        Snackbar.make(trash_layout, "휴지통을 비웠습니다.", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(trash_layout, getString(R.string.remove_all_trash), Snackbar.LENGTH_SHORT).show()
                     }
-                    .setNegativeButton("취소") {dialog, _ ->
+                    .setNegativeButton(getString(R.string.negative_button)) {dialog, _ ->
                         dialog.dismiss()
                     }
                     .show()

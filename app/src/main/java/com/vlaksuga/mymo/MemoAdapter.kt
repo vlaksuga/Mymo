@@ -55,7 +55,7 @@ class MemoAdapter internal constructor(context: Context) :
             holder.importantItemView.visibility = View.GONE
         }
 
-        val dateSimpleDateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.ROOT)
+        val dateSimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
         val timeSimpleDateFormat = SimpleDateFormat("a hh:mm", Locale.ROOT)
 
         holder.titleItemView.text = currentMemo.memoTitle

@@ -33,7 +33,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="날짜"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="10sp"
                 app:fontFamily="@font/roboto_bold"
@@ -46,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="시간"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="10sp"
                 app:fontFamily="@font/roboto_bold"
@@ -61,7 +59,6 @@
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="내용이 나오는 곳이 길어지면 어떻게 할라고 "
                 app:fontFamily="@font/roboto_bold"
                 app:layout_constraintStart_toEndOf="@+id/colorBar_textView"
                 app:layout_constraintTop_toBottomOf="@+id/initDate_textView" />

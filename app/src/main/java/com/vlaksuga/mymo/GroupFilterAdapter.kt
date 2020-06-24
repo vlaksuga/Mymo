@@ -48,7 +48,7 @@ class GroupFilterAdapter internal constructor(context: Context) :
         holder.barColorItemView.backgroundTintList = ColorStateList.valueOf(Color.parseColor(current.groupColor))
         holder.countView.text = getMemoCountByGroupId(current.groupId).toString()
 
-        if(position == filterListResult.size) {
+        if(position == 0) {
             holder.titleItemView.setTextColor(ColorStateList.valueOf(Color.parseColor("#DDDDDD")))
             holder.barColorItemView.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#DDDDDD"))
         }

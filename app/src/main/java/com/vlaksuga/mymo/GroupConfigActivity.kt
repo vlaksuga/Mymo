@@ -29,16 +29,11 @@ class GroupConfigActivity : AppCompatActivity() {
         setContentView(R.layout.activity_group_list)
 
         // 액션 바
-        supportActionBar!!.title = "그룹 관리"
+        supportActionBar!!.title = getString(R.string.group_config_title)
 
         // 어뎁터
         adapter = GroupAdapter(this)
 
-        // 리사이클러뷰
-        val recyclerView = findViewById<RecyclerView>(R.id.group_recyclerView)
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
 
         // 뷰 모델
         viewModel = ViewModelProvider(this).get(ViewModel::class.java)
@@ -52,6 +47,12 @@ class GroupConfigActivity : AppCompatActivity() {
                 adapter.setMemos(it)
             }
         })
+
+        // 리사이클러뷰
+        val recyclerView = findViewById<RecyclerView>(R.id.group_recyclerView)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
 
         // 아이템 클릭 -> 그룹 편집
         adapter.setOnItemClickListener(object : GroupAdapter.OnItemClickListener {

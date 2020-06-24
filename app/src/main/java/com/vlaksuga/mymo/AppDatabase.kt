@@ -21,7 +21,13 @@ abstract class AppDatabase : RoomDatabase() {
             INSTANCE?.let {
                 scope.launch {
                     // POPULATE GROUP ROW INIT
-                    it.dao().groupInsert(group = Group(1, "기타", "분류되지 않은 메모들 입니다.", "#292B2C"))
+                    it.dao().groupInsert(group = Group(1, "ETC", "ETC", "#292B2C"))
+                    it.dao().groupInsert(group = Group(2, "WORK", "", "#0065A3"))
+                    it.dao().groupInsert(group = Group(3, "LIFE STYLE", "", "#008ADF"))
+                    it.dao().groupInsert(group = Group(4, "PROJECT", "", "#54E360"))
+                    it.dao().groupInsert(group = Group(5, "SIMPLE DIARY", "", "#FFD400"))
+                    it.dao().groupInsert(group = Group(6, "SHOPPING", "", "#FF9100"))
+                    it.dao().groupInsert(group = Group(7, "IMPORTANT", "", "#FF4949"))
                 }
             }
         }

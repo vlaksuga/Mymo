@@ -91,7 +91,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         val isImportant = false
         val memoGroupId = 1
         val memoGroupColor = "#292B2C"
-        val memoGroupName = "기타"
+        val memoGroupName = "ETC"
         repository.insert(memo = Memo(memoId, memoTitle, memoContent, initTime, isImportant, memoGroupId, memoGroupColor, memoGroupName))
     }
 
@@ -104,7 +104,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         val isImportant = false
         val memoGroupId = 1
         val memoGroupColor = "#292B2C"
-        val memoGroupName = "기타"
+        val memoGroupName = "ETC"
         repository.delete(memo = Memo(memoId, memoTitle, memoContent, initTime, isImportant, memoGroupId, memoGroupColor, memoGroupName))
     }
 

@@ -24,9 +24,9 @@ class SwipeTutorial : AppCompatActivity() {
         App.prefs.introPassed = true
 
         intros = ArrayList<Intro>()
-        (intros as ArrayList<Intro>).add(Intro(R.drawable.page3, "그룹 관리","메모를 색이 있는 그룹으로 관리할 수 있습니다."))
-        (intros as ArrayList<Intro>).add(Intro(R.drawable.page2, "검색","검색으로 원하는 메모를 쉽게 찾을 수 있습니다."))
-        (intros as ArrayList<Intro>).add(Intro(R.drawable.page1, "빠른 삭제","오른쪽으로 밀어주세요. 메모가 삭제됩니다."))
+        (intros as ArrayList<Intro>).add(Intro(R.drawable.colorful, getString(R.string.intro_title1), getString(R.string.intro_desc1)))
+        (intros as ArrayList<Intro>).add(Intro(R.drawable.buttons, getString(R.string.intro_title2), getString(R.string.intro_desc2)))
+        (intros as ArrayList<Intro>).add(Intro(R.drawable.delete, getString(R.string.intro_title3),getString(R.string.intro_desc3)))
 
         introAdapter = IntroAdapter(intros, this)
         viewPager = findViewById(R.id.intro_viewPager)

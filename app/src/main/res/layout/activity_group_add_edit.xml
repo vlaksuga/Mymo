@@ -16,7 +16,7 @@
         android:clickable="true"
         android:maxLines="1"
         android:padding="16dp"
-        android:text="색을 선택해주세요"
+        android:text="@string/choose_color"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
 
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@android:color/transparent"
-        android:hint="그룹 이름"
+        android:hint="@string/group_title"
         android:inputType="text"
         android:maxLines="1"
         android:padding="16dp"
@@ -50,7 +50,7 @@
         android:maxLines="1"
         android:inputType="text"
         android:background="@android:color/transparent"
-        android:hint="설명 (필수 아님)"
+        android:hint="@string/group_desc"
         android:padding="16dp"
         android:textSize="16sp"/>
 
@@ -59,6 +59,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:text="그룹 삭제" />
+        android:text="@string/delete_group" />
 
 </LinearLayout>

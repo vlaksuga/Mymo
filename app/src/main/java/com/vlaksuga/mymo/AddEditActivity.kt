@@ -50,7 +50,7 @@ class AddEditActivity : AppCompatActivity() {
         const val COLOR_DEFAULT = "#292B2C"
 
         // DEFAULT
-        const val GROUP_NAME_DEFAULT = "기타"
+        const val GROUP_NAME_DEFAULT = "ETC"
 
     }
 
@@ -140,6 +140,9 @@ class AddEditActivity : AppCompatActivity() {
 
             title_editText.setText(intent.getStringExtra(EXTRA_REPLY_TITLE))
             content_editText.setText(intent.getStringExtra(EXTRA_REPLY_CONTENT))
+            see_content_textView.text = intent.getStringExtra(EXTRA_REPLY_CONTENT)
+            see_content_textView.visibility = View.VISIBLE
+            content_editText.visibility = View.GONE
             latestDate_textView.text = latestDate
             currentFilterState = intent.getIntExtra(EXTRA_REPLY_FILTER_STATE, 0)
             currentThemeColor = intent.getStringExtra(EXTRA_REPLY_GROUP_COLOR)!!
@@ -157,6 +160,14 @@ class AddEditActivity : AppCompatActivity() {
             supportActionBar!!.title = ""
             supportActionBar!!.setBackgroundDrawable(object :
                 ColorDrawable(Color.parseColor(currentThemeColor)) {})
+        }
+
+        // 텍스트뷰를 에디트 뷰로
+        if(see_content_textView.visibility == View.VISIBLE) {
+            see_content_textView.setOnClickListener {
+                it.visibility = View.GONE
+                content_editText.visibility = View.VISIBLE
+            }
         }
 
         // 추가 화면 구성
@@ -185,6 +196,7 @@ class AddEditActivity : AppCompatActivity() {
         }
 
         // 액션바
+        supportActionBar!!.title = getString(R.string.new_memo)
         supportActionBar!!.setBackgroundDrawable(object :
             ColorDrawable(Color.parseColor(currentThemeColor)) {})
 
@@ -228,7 +240,7 @@ class AddEditActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
                 Unit
             }
-            Snackbar.make(add_layout, "그룹이 추가되었습니다.", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(add_layout, getString(R.string.add_group_message), Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -257,12 +269,12 @@ class AddEditActivity : AppCompatActivity() {
                 if (!currentImportance) {
                     item.setIcon(R.drawable.ic_lock)
                     currentImportance = true
-                    Toast.makeText(this@AddEditActivity, "삭제되지 않는 메모가 되었습니다..", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@AddEditActivity, getString(R.string.turn_important), Toast.LENGTH_SHORT)
                         .show()
                 } else {
                     item.setIcon(R.drawable.ic_lock_open)
                     currentImportance = false
-                    Toast.makeText(this@AddEditActivity, "잠금 상태에서 해제되었습니다.", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@AddEditActivity, getString(R.string.turn_unimportant), Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -275,7 +287,7 @@ class AddEditActivity : AppCompatActivity() {
 
     private fun deleteThisMemo() {
         if(currentImportance) {
-            Toast.makeText(this, "잠금상태에선 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.unable_to_delete_when_important), Toast.LENGTH_SHORT).show()
             return
         }
         if (intent.hasExtra(EXTRA_REPLY_ID)) {
@@ -295,7 +307,7 @@ class AddEditActivity : AppCompatActivity() {
                     )
                 )
                 finish()
-                Toast.makeText(this, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.deleted_message), Toast.LENGTH_SHORT).show()
             }
             builder.setNegativeButton(getString(R.string.negative_button)) { dialogInterface: DialogInterface, _: Int ->
                 dialogInterface.dismiss()
@@ -320,7 +332,7 @@ class AddEditActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SEND)
         val titleText = title_editText?.text.toString()
         val contentText = content_editText?.text.toString()
-        val shareContent = "제목 : $titleText \n내용 : $contentText"
+        val shareContent = "TITLE : $titleText \nCONTENT : $contentText"
         intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_TEXT, shareContent)
         val shareMemoIntent = Intent.createChooser(intent, getString(R.string.share_title))
@@ -339,7 +351,7 @@ class AddEditActivity : AppCompatActivity() {
         val replyIntent = Intent()
 
         if (TextUtils.isEmpty(resultTitle)) {
-            title = "제목없음"
+            title = getString(R.string.default_memo_title)
         }
         if (TextUtils.isEmpty(resultContent)) {
             Snackbar.make(add_layout, getString(R.string.insert_memo), Snackbar.LENGTH_SHORT).show()
@@ -375,13 +387,13 @@ class AddEditActivity : AppCompatActivity() {
     private fun askModifiedWhenLeave() {
 
         val askDialog = AlertDialog.Builder(this)
-        askDialog.setMessage("변경사항을 저장할까요?")
-            .setPositiveButton("저장"
+        askDialog.setMessage(getString(R.string.ask_modify))
+            .setPositiveButton(getString(R.string.positive_button)
             ) { _, _ -> saveMemo() }
 
-            .setNeutralButton("저장 안 함"
+            .setNeutralButton(getString(R.string.neutral_button)
             ) { _, _ -> finish() }
-            .setNegativeButton("취소") { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton(getString(R.string.negative_button)) { dialog, _ -> dialog.dismiss() }
             .show()
     }
 

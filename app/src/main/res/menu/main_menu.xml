@@ -17,13 +17,18 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/intro_menu"
+        android:title="@string/intro"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/group_config"
-        android:title="그룹 관리"
+        android:title="@string/group_config_title"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/trash_menu"
-        android:title="휴지통"
+        android:title="@string/trash_title"
         app:showAsAction="never"/>
 
     <item

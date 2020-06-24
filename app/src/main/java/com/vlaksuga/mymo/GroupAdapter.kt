@@ -40,14 +40,13 @@ class GroupAdapter internal constructor(context: Context) :
     }
 
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
-        if (position == filterListResult.size - 1) {
+        if (position == 0) {
             holder.cardItemView.visibility = View.GONE
             holder.titleItemView.visibility = View.GONE
             holder.barColorItemView.visibility = View.GONE
             holder.itemView.layoutParams.width = 0
             holder.itemView.layoutParams.height = 0
         }
-
         val current = filterListResult[position]
         holder.cardItemView.setOnClickListener {
             if (position != RecyclerView.NO_POSITION) {

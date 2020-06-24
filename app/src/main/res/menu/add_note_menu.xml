@@ -9,7 +9,7 @@
     <item
         android:id="@+id/important_memu"
         android:icon="@drawable/ic_lock_open"
-        android:title="잠금"
+        android:title="@string/important_title"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/share_memo"
