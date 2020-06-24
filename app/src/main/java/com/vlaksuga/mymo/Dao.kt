@@ -25,7 +25,7 @@ interface Dao {
 
     // table : group_table
 
-    @Query("SELECT * from group_table ORDER BY groupId ASC")
+    @Query("SELECT * from group_table ORDER BY groupId DESC")
     fun getGroupAll(): LiveData<List<Group>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

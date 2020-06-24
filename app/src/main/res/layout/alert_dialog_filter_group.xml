@@ -48,13 +48,17 @@
             android:id="@+id/ad_button_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_margin="16dp"
-            android:background="@color/colorPrimary"
             android:layout_below="@id/alert_dialog_recyclerView"
-            android:text="모든 노트"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorPrimary"
+            android:text="모든 그룹"
             android:textColor="#FFFFFF"
             app:layout_constrainedHeight="true" />
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

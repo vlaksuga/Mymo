@@ -40,7 +40,7 @@ class GroupAdapter internal constructor(context: Context) :
     }
 
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
-        if (position == 0) {
+        if (position == filterListResult.size - 1) {
             holder.cardItemView.visibility = View.GONE
             holder.titleItemView.visibility = View.GONE
             holder.barColorItemView.visibility = View.GONE

@@ -628,6 +628,12 @@ class MainActivity : AppCompatActivity() {
             searchView.isIconified = true
             return
         }
+
+        if (App.prefs.instantMemoGroupId != 1){
+            getAllMemo()
+            return
+        }
+
         else {
             val closeBuilder = AlertDialog.Builder(this)
             closeBuilder.setMessage("종료하시겠습니까?")

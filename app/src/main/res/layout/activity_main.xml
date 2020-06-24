@@ -35,19 +35,20 @@
                 app:layout_collapseMode="parallax"/>
 
 
-
             <TextView
                 android:id="@+id/desc_textView"
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
                 android:layout_gravity="bottom"
-                android:textColor="#FFFFFF"
-                app:layout_collapseMode="parallax"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="50dp"
+                android:fitsSystemWindows="true"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="설명을 편집할 수 있습니다."
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
-                android:text="설명을 편집할 수 있습니다."/>
+                app:layout_collapseMode="parallax" />
 
             <TextView
                 android:id="@+id/count_textView"

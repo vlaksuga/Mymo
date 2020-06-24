@@ -113,7 +113,7 @@ class GroupAddEditActivity : AppCompatActivity() {
                 val colorPicker = ColorPicker(this)
                 val colors = arrayListOf(
                     "#292B2C",
-                    "#000000",
+                    "#111111",
                     "#0A7533",
                     "#FF3A2F",
                     "#FA4659",
@@ -202,12 +202,8 @@ class GroupAddEditActivity : AppCompatActivity() {
                 .show()
             return
         }
-        if (TextUtils.isEmpty(resultContent)) {
-            Snackbar.make(add_group_layout, getString(R.string.insert_memo), Snackbar.LENGTH_SHORT)
-                .show()
-            return
-        }
-        if (!groupColor.contains('#')) {
+
+        if (!groupColor.contains('#') || groupColor == "#000000") {
             Snackbar.make(add_group_layout, "색을 선택해주세요", Snackbar.LENGTH_SHORT).show()
             return
         }
