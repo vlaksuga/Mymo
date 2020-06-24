@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     private var currentThemeColor: String = AddEditActivity.COLOR_DEFAULT
     private var currentFilterState: Int = 0
     private var currentGroupId: Int = -1
-    private var currentGroupName: String = "NO GROUP"
+    private var currentGroupName: String = "기타"
     private var currentGroupColor: String = "#000000"
 
     // 시작
@@ -63,18 +63,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         // 인트로 패스 체크
         val prefsState : Boolean = App.prefs.introPassed
-
-        Log.d("prefsState.main.rockteki", prefsState.toString())
 
         if(!prefsState) {
             startActivity(Intent(this, SwipeTutorial::class.java))
         }
-
-        Log.d("onCreate.main.currentFilterState.rockteki", currentFilterState.toString())
-        Log.d("onCreate.main.currentGroupId.rockteki", currentGroupId.toString())
 
 
         // 툴바
@@ -103,12 +97,6 @@ class MainActivity : AppCompatActivity() {
                 checkEmptyView()
                 val memoCounter = memoAdapter.itemCount.toString() + " NOTES"
                 count_textView.text = memoCounter
-                Log.d(
-                    "viewModel.allMemos.main.currentFilterState.rockteki",
-                    currentFilterState.toString()
-                )
-                Log.d("viewModel.allMemos.main.currentGroupName.rockteki", currentGroupName)
-                Log.d("viewModel.allMemos.main.currentGroupId.rockteki", currentGroupId.toString())
             }
         })
 
@@ -125,8 +113,8 @@ class MainActivity : AppCompatActivity() {
 
         // 리사이클러뷰
         val mainRecyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        mainRecyclerView.setHasFixedSize(true)
         mainRecyclerView.layoutManager = LinearLayoutManager(this)
+        mainRecyclerView.setHasFixedSize(true)
         mainRecyclerView.adapter = memoAdapter
 
 
@@ -170,7 +158,7 @@ class MainActivity : AppCompatActivity() {
                         )
 
                             .setAction(getString(R.string.undo), View.OnClickListener {
-                                viewModel.insert(selectedMemo)
+                                viewModel.undoMemo(selectedMemo)
                             })
                             .setActionTextColor(Color.parseColor(getString(R.string.undo_text_color)))
                             .show()
@@ -179,11 +167,11 @@ class MainActivity : AppCompatActivity() {
                         getString(R.string.negative_button)
                     ) { _, _ ->
                         viewModel.delete(selectedMemo)
-                        viewModel.insert(selectedMemo)
+                        viewModel.undoMemo(selectedMemo)
                     }
                     setOnCancelListener {
                         viewModel.delete(selectedMemo)
-                        viewModel.insert(selectedMemo)
+                        viewModel.undoMemo(selectedMemo)
                     }
                     show()
                 }
@@ -277,10 +265,6 @@ class MainActivity : AppCompatActivity() {
                 App.prefs.instantMemoGroupId = memo.groupId
                 App.prefs.instantMemoImportance = memo.isImportant
 
-                Log.d("onItemClick.main.App.prefs.instantMemoTitle.rockteki", App.prefs.instantMemoTitle!!)
-                Log.d("onItemClick.main.App.prefs.instantMemoContent.rockteki", App.prefs.instantMemoContent!!)
-                Log.d("onItemClick.main.App.prefs.instantMemoImportance.rockteki", App.prefs.instantMemoImportance.toString())
-                Log.d("onItemClick.main.App.prefs.instantMemoGroupId.rockteki", App.prefs.instantMemoGroupId.toString())
 
 
                 val editIntent = Intent(this@MainActivity, AddEditActivity::class.java)
@@ -294,10 +278,6 @@ class MainActivity : AppCompatActivity() {
                 editIntent.putExtra(AddEditActivity.EXTRA_REPLY_GROUP_NAME, memo.groupName)
                 editIntent.putExtra(AddEditActivity.EXTRA_REPLY_FILTER_STATE, currentFilterState)
                 startActivityForResult(editIntent, EDIT_MEMO_REQUEST)
-
-                Log.d("onItemClick.main.currentFilterState.rockteki", currentFilterState.toString())
-                Log.d("onItemClick.main.currentGroupId.rockteki", currentGroupId.toString())
-
             }
         })
     }
@@ -324,12 +304,6 @@ class MainActivity : AppCompatActivity() {
 
                 // 커런트 그룹 인텐트
                 currentFilterState = data.getIntExtra(AddEditActivity.EXTRA_REPLY_FILTER_STATE, 0)
-
-                Log.d(
-                    "ADD_MEMO_REQUEST.main.currentFilterState.rockteki",
-                    currentFilterState.toString()
-                )
-                Log.d("ADD_MEMO_REQUEST.main.currentGroupId.rockteki", currentGroupId.toString())
                 Unit
             }
 
@@ -369,14 +343,6 @@ class MainActivity : AppCompatActivity() {
 
                 // 커런트 그룹 인텐트
                 currentFilterState = data.getIntExtra(AddEditActivity.EXTRA_REPLY_FILTER_STATE, 0)
-
-
-                Log.d(
-                    "EDIT_MEMO_REQUEST.main.currentFilterState.rockteki",
-                    currentFilterState.toString()
-                )
-                Log.d("EDIT_MEMO_REQUEST.main.currentGroupId.rockteki", currentGroupId.toString())
-
                 Unit
             }
 
@@ -437,7 +403,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
 
             // 모두 삭제
-            R.id.delete_all_memos -> deleteAllMemos()
+            R.id.delete_all_memos -> appReset()
 
             // 새로 만들기
             R.id.add_memo_menu -> addNewMemo()
@@ -453,6 +419,10 @@ class MainActivity : AppCompatActivity() {
                 getAllMemo()
                 appBarLayout.setExpanded(false)
                 return true
+            }
+
+            R.id.trash_menu -> apply {
+                startActivity(Intent(this, TrashActivity::class.java))
             }
 
             // 그룹 선택
@@ -494,11 +464,6 @@ class MainActivity : AppCompatActivity() {
                     .setBackgroundTint(Color.parseColor(group.groupColor)).show()
                 checkEmptyView()
                 dialog.dismiss()
-                Log.d(
-                    "selectGroupDialog.main.currentFilterState.rockteki",
-                    currentFilterState.toString()
-                )
-                Log.d("selectGroupDialog.main.currentGroupId.rockteki", currentGroupId.toString())
             }
         })
 
@@ -519,8 +484,6 @@ class MainActivity : AppCompatActivity() {
         dialog.setCancelable(true)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
-        Log.d("allButton.main.currentFilterState.rockteki", currentFilterState.toString())
-        Log.d("allButton.main.currentGroupId.rockteki", currentGroupId.toString())
     }
 
     // 그룹 설정으로 가기
@@ -530,11 +493,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     // 전체 메모 삭제
-    private fun deleteAllMemos() {
+    private fun appReset() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage(getString(R.string.delete_All_message))
         builder.setPositiveButton("확인") { _, _ ->
             viewModel.deleteAll()
+            viewModel.deleteAllGroup(1)
+            viewModel.deleteAllTrash()
             Snackbar.make(
                 recyclerView,
                 getString(R.string.delete_all_memo),
@@ -546,8 +511,6 @@ class MainActivity : AppCompatActivity() {
         }
         val dialog: AlertDialog = builder.create()
         dialog.show()
-        Log.d("addNewMemo.main.currentFilterState.rockteki", currentFilterState.toString())
-        Log.d("addNewMemo.allMemos.main.currentGroupId.rockteki", currentGroupId.toString())
     }
 
     private fun setListByGroup(group: Group) {
@@ -580,15 +543,6 @@ class MainActivity : AppCompatActivity() {
         newIntent.putExtra(AddEditActivity.EXTRA_REPLY_GROUP_NAME, currentGroupName)
         newIntent.putExtra(AddEditActivity.EXTRA_REPLY_GROUP_COLOR, currentGroupColor)
         startActivityForResult(newIntent, ADD_MEMO_REQUEST)
-
-        Log.d("addNewMemo.main.currentFilterState.rockteki", currentFilterState.toString())
-        Log.d("addNewMemo.allMemos.main.currentGroupId.rockteki", currentGroupId.toString())
-        Log.d("addNewMemo.main.App.prefs.instantMemoTitle.rockteki", App.prefs.instantMemoTitle!!)
-        Log.d("addNewMemo.main.App.prefs.instantMemoContent.rockteki", App.prefs.instantMemoContent!!)
-        Log.d("addNewMemo.main.App.prefs.instantMemoImportance.rockteki", App.prefs.instantMemoImportance.toString())
-        Log.d("addNewMemo.main.App.prefs.instantMemoGroupId.rockteki", App.prefs.instantMemoGroupId.toString())
-
-
     }
 
     // 전체 메모 열기
@@ -599,7 +553,7 @@ class MainActivity : AppCompatActivity() {
         currentFilterState = 0
         currentThemeColor = AddEditActivity.COLOR_DEFAULT
         currentGroupColor = AddEditActivity.COLOR_DEFAULT
-        currentGroupName = "그룹 없음"
+        currentGroupName = "기타"
         currentGroupId = 1
         fab.backgroundTintList =
             ColorStateList.valueOf(Color.parseColor(AddEditActivity.COLOR_DEFAULT))
@@ -608,8 +562,7 @@ class MainActivity : AppCompatActivity() {
         val memoCounter = memoAdapter.itemCount.toString() + " NOTES"
         count_textView.text = memoCounter
         checkEmptyView()
-        Log.d("getAllMemo.main.currentFilterState.rockteki", currentFilterState.toString())
-        Log.d("getAllMemo.allMemos.main.currentGroupId.rockteki", currentGroupId.toString())
+
     }
 
     // 리스트 없음

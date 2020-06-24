@@ -21,12 +21,17 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/delete_all_memos"
-        android:title="@string/menu_delete_all_memos"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/group_config"
         android:title="그룹 관리"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/trash_menu"
+        android:title="휴지통"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/delete_all_memos"
+        android:title="@string/app_reset"
+        app:showAsAction="never" />
 </menu>

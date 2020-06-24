@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/trash_holder_cardView"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginBottom="4dp"
+    app:cardUseCompatPadding="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/trash_exDate_textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="날짜"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="10sp"
+                app:fontFamily="@font/roboto_bold"
+                app:layout_constraintStart_toEndOf="@+id/guide_left_imageView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/trash_title_textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="내용이 나오는 곳이 길어지면 어떻게 할라고 "
+                app:fontFamily="@font/roboto_bold"
+                app:layout_constraintEnd_toStartOf="@+id/guide_right_imageView"
+                app:layout_constraintStart_toStartOf="@+id/trash_exDate_textView"
+                app:layout_constraintTop_toBottomOf="@+id/trash_exDate_textView" />
+
+            <TextView
+                android:id="@+id/trash_content_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/guide_expire_trash_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:tint="#aaaaaa"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_delete_forever" />
+
+            <ImageView
+                android:id="@+id/guide_right_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="#aaaaaa"
+                app:layout_constraintBottom_toBottomOf="@+id/guide_expire_trash_imageView"
+                app:layout_constraintEnd_toStartOf="@+id/guide_expire_trash_imageView"
+                app:layout_constraintTop_toTopOf="@+id/guide_expire_trash_imageView"
+                app:srcCompat="@drawable/ic_fast_forward" />
+
+            <ImageView
+                android:id="@+id/guide_recover_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:tint="#aaaaaa"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_assignment_return" />
+
+            <ImageView
+                android:id="@+id/guide_left_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="#aaaaaa"
+                app:layout_constraintBottom_toBottomOf="@+id/guide_recover_imageView"
+                app:layout_constraintStart_toEndOf="@+id/guide_recover_imageView"
+                app:layout_constraintTop_toTopOf="@+id/guide_recover_imageView"
+                app:srcCompat="@drawable/ic_fast_rewind" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

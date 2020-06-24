@@ -36,4 +36,21 @@ interface Dao {
 
     @Delete
     suspend fun groupDelete(group: Group)
+
+    @Query("Delete from group_table WHERE groupId != :groupId")
+    suspend fun deleteAllGroup(groupId : Int)
+
+    // table : trash
+
+    @Query("SELECT * from trash ORDER BY trashExpireTime DESC")
+    fun getTrashAll(): LiveData<List<Trash>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun trashInsert(trash : Trash)
+
+    @Delete
+    suspend fun trashDelete(trash : Trash)
+
+    @Query("Delete from trash")
+    suspend fun deleteAllTrash()
 }

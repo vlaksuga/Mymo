@@ -22,7 +22,6 @@ class MemoAdapter internal constructor(context: Context) :
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     private var memos = emptyList<Memo>()
-    private var groups = emptyList<Group>()
 
     private lateinit var listener: OnItemClickListener
 

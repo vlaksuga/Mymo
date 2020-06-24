@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 class Repository(private val dao: Dao) {
     val allMemos: LiveData<List<Memo>> = dao.getCurrentIdAll()
     val allGroups : LiveData<List<Group>> = dao.getGroupAll()
+    val allTrash : LiveData<List<Trash>> = dao.getTrashAll()
 
 
 
@@ -34,5 +35,21 @@ class Repository(private val dao: Dao) {
 
     suspend fun groupDelete(group: Group) {
         dao.groupDelete(group)
+    }
+
+    suspend fun deleteAllGroup(groupId : Int) {
+        dao.deleteAllGroup(groupId)
+    }
+
+    suspend fun trashInsert(trash: Trash) {
+        dao.trashInsert(trash)
+    }
+
+    suspend fun trashDelete(trash: Trash) {
+        dao.trashDelete(trash)
+    }
+
+    suspend fun deleteAllTrash() {
+        dao.deleteAllTrash()
     }
 }

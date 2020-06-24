@@ -47,7 +47,7 @@ class AddEditActivity : AppCompatActivity() {
         const val COLOR_DEFAULT = "#292B2C"
 
         // DEFAULT
-        const val GROUP_NAME_DEFAULT = "그룹 없음"
+        const val GROUP_NAME_DEFAULT = "기타"
 
     }
 
@@ -78,11 +78,7 @@ class AddEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_edit)
-        Log.d("onCreate.add.App.prefs.instantMemoTitle.rockteki", App.prefs.instantMemoTitle!!)
-        Log.d("onCreate.add.App.prefs.instantMemoContent.rockteki", App.prefs.instantMemoContent!!)
-        Log.d("onCreate.add.App.prefs.instantMemoGroupId.rockteki", App.prefs.instantMemoGroupId.toString())
-        Log.d("onCreate.add.currentFilterState.rockteki", currentFilterState.toString())
-        Log.d("onCreate.add.currentGroupId.rockteki", currentGroupId.toString())
+
         // 타이틀
         supportActionBar!!.title = null
         supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.parseColor(currentThemeColor)))
@@ -127,8 +123,6 @@ class AddEditActivity : AppCompatActivity() {
                         )
                     )
                 }
-                Log.d("onItemClick.add.currentFilterState.rockteki", currentFilterState.toString())
-                Log.d("onItemClick.add.currentGroupId.rockteki", currentGroupId.toString())
             }
         })
 
@@ -160,22 +154,11 @@ class AddEditActivity : AppCompatActivity() {
             supportActionBar!!.title = ""
             supportActionBar!!.setBackgroundDrawable(object :
                 ColorDrawable(Color.parseColor(currentThemeColor)) {})
-
-            Log.d("editmode.add.currentFilterState.rockteki", currentFilterState.toString())
-            Log.d("editmode.add.currentGroupId.rockteki", currentGroupId.toString())
         }
 
         // 추가 화면 구성
         if (currentFilterState != 0) {
             currentGroupId = 1
-            Log.d(
-                "newmode.currentFilterState !=0.add.currentFilterState.rockteki",
-                currentFilterState.toString()
-            )
-            Log.d(
-                "newmode.currentFilterState !=0.add.currentGroupId.rockteki",
-                currentGroupId.toString()
-            )
         }
 
 
@@ -201,8 +184,6 @@ class AddEditActivity : AppCompatActivity() {
         // 액션바
         supportActionBar!!.setBackgroundDrawable(object :
             ColorDrawable(Color.parseColor(currentThemeColor)) {})
-        Log.d("newmode.add.currentFilterState.rockteki", currentFilterState.toString())
-        Log.d("newmode.add.currentGroupId.rockteki", currentGroupId.toString())
 
 
         // 컬러바 클릭시 컬러 아이콘 토글
@@ -383,8 +364,6 @@ class AddEditActivity : AppCompatActivity() {
         }
 
         setResult(Activity.RESULT_OK, replyIntent)
-        Log.d("save.add.currentFilterState.rockteki", currentFilterState.toString())
-        Log.d("save.add.currentGroupId.rockteki", currentGroupId.toString())
         finish()
 
 
@@ -410,11 +389,6 @@ class AddEditActivity : AppCompatActivity() {
             if(App.prefs.instantMemoGroupId != currentGroupId) {
                 askModifiedWhenLeave()
             }
-
-            Log.d("onBackPressed.main.App.prefs.instantMemoTitle.rockteki", App.prefs.instantMemoTitle!!)
-            Log.d("onBackPressed.main.App.prefs.instantMemoContent.rockteki", App.prefs.instantMemoContent!!)
-            Log.d("onBackPressed.main.App.prefs.instantMemoImportance.rockteki", App.prefs.instantMemoImportance.toString())
-            Log.d("onBackPressed.main.App.prefs.instantMemoGroupId.rockteki", App.prefs.instantMemoGroupId.toString())
             return
         }
         super.onBackPressed()
@@ -424,11 +398,6 @@ class AddEditActivity : AppCompatActivity() {
         App.prefs.instantMemoTitle = ""
         App.prefs.instantMemoContent = ""
         App.prefs.instantMemoImportance = false
-
-        Log.d("onStop.main.App.prefs.instantMemoTitle.rockteki", App.prefs.instantMemoTitle!!)
-        Log.d("onStop.main.App.prefs.instantMemoContent.rockteki", App.prefs.instantMemoContent!!)
-        Log.d("onStop.main.App.prefs.instantMemoImportance.rockteki", App.prefs.instantMemoImportance.toString())
-        Log.d("onStop.main.App.prefs.instantMemoGroupId.rockteki", App.prefs.instantMemoGroupId.toString())
         super.onStop()
     }
 }
