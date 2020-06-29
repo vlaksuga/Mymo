@@ -389,11 +389,6 @@ class MainActivity : AppCompatActivity() {
             // 새로 만들기
             R.id.add_memo_menu -> addNewMemo()
 
-            R.id.intro_menu -> apply {
-                val introIntent = Intent(this, SwipeTutorial::class.java)
-                startActivity(introIntent)
-            }
-
             // 제목 검색
             R.id.action_search -> apply {
                 getAllMemo()
@@ -404,7 +399,6 @@ class MainActivity : AppCompatActivity() {
             R.id.trash_menu -> apply {
                 startActivity(Intent(this, TrashActivity::class.java))
             }
-
 
             // 그룹 액티비티 추가 / 편집
             R.id.group_config -> goToGroupAddEditActivity()

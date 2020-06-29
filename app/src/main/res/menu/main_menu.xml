@@ -15,12 +15,6 @@
         android:title="@string/add_new"
         android:iconTint="#FFFFFF"
         app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/intro_menu"
-        android:title="@string/intro"
-        app:showAsAction="never"/>
-
     <item
         android:id="@+id/group_config"
         android:title="@string/group_config_title"
