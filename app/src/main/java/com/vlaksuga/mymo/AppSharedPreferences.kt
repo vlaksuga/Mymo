@@ -44,7 +44,5 @@ class AppSharedPreferences(context: Context) {
         const val PREF_KEY_MEMO_CONTENT = "memoContent"
         const val PREF_KEY_MEMO_IMPORTANCE = "memoImportance"
         const val PREF_KEY_MEMO_GROUP_ID = "memoGroupId"
-
-
     }
 }

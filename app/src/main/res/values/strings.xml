@@ -19,7 +19,7 @@
     <string name="update_fail">수정에 실패했습니다.</string>
     <string name="delete_All_message">모든 노트와 그룹이 사라집니다.  초기화 하시겠습니까?</string>
     <string name="delete_all_memo">초기화 되었습니다.</string>
-    <string name="default_currentGroupName" translatable="false">ETC</string>
+    <string name="default_currentGroupName">ETC</string>
     <string name="close_app_message">종료하시겠습니까?</string>
     <string name="add_group_message">그룹이 추가되었습니다.</string>
     <string name="turn_important">삭제되지 않는 노트가 되었습니다.</string>

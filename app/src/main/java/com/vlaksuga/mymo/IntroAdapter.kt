@@ -15,7 +15,7 @@ class IntroAdapter(private val intros: List<Intro>, private val context: Context
 
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view.equals(`object`)
+        return view == `object`
     }
 
     override fun getCount(): Int {

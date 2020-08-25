@@ -85,4 +85,5 @@
     <string name="add_new_group">Add</string>
     <string name="empty">EMPTY</string>
     <string name="intro">INTRO</string>
+    <string name="default_currentGroupName">ETC</string>
 </resources>

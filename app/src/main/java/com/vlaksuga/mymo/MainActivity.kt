@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val ADD_MEMO_REQUEST: Int = 1
         const val EDIT_MEMO_REQUEST: Int = 2
+        const val TAG : String = "MainActivity"
     }
 
     lateinit var memoAdapter: MemoAdapter
